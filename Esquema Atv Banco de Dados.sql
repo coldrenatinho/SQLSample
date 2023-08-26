@@ -124,8 +124,13 @@ VALUES
     (3, 4, '2023-09-18 14:00:00', 'Aberta');
 
 #-----------------------FIM DO INSERT----------------------- 
+system cls #Limpa a tela
+
 
 #Consultando os Dados
+
+
+\! echo 'Ficha de atendimentos'; #Faz o print
 
 SELECT c.CodConsulta, m.Nome AS NomeMedico, p.Nome AS NomePacinte, c.DiaConsulta, c.StatusConsulta
 FROM Consulta C
@@ -133,3 +138,4 @@ INNER JOIN Medico m on
 m.CodMedico = c.CodMedico
 INNER JOIN Paciente p on 
 p.CodPaciente = c.CodPaciente;
+
