@@ -129,7 +129,7 @@ system cls #Limpa a tela
 
 #Consultando os Dados
 
-
+system cls #Limpa a tela
 \! echo 'Ficha de atendimentos'; #Faz o print
 
 SELECT c.CodConsulta, m.Nome AS NomeMedico, p.Nome AS NomePacinte, c.DiaConsulta, c.StatusConsulta
