@@ -125,17 +125,24 @@ VALUES
 
 #-----------------------FIM DO INSERT----------------------- 
 system cls #Limpa a tela
+\! echo 'Ficha de atendimentos'; #Faz o print NO TERMINAL
 
 
-#Consultando os Dados
+-----------------------INSERINDO VIEW-----------------------
 
-system cls #Limpa a tela
-\! echo 'Ficha de atendimentos'; #Faz o print
+CREATE VIEW ConsultaAgendada AS
+    SELECT c.CodConsulta, m.Nome AS NomeMedico, p.Nome AS NomePacinte, c.DiaConsulta, c.StatusConsulta
+    FROM Consulta C
+    INNER JOIN Medico m on
+    m.CodMedico = c.CodMedico
+    INNER JOIN Paciente p on 
+    p.CodPaciente = c.CodPaciente;
 
-SELECT c.CodConsulta, m.Nome AS NomeMedico, p.Nome AS NomePacinte, c.DiaConsulta, c.StatusConsulta
-FROM Consulta C
-INNER JOIN Medico m on
-m.CodMedico = c.CodMedico
-INNER JOIN Paciente p on 
-p.CodPaciente = c.CodPaciente;
+-----------------------INSERINDO VIEW-----------------------
+
+-----------------------Retorno da View-----------------------
+SELECT *
+FROM ConsultaAgendada
+
+
 
