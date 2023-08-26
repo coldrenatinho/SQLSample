@@ -93,4 +93,4 @@ CREATE TABLE IF NOT EXISTS Consulta(
 ALTER TABLE Consulta ADD constraint foreign key FK_Medico_CodMedico (CodMedico) REFERENCES Medico (CodMedico);
 ALTER TABLE Consulta ADD constraint foreign key FK_Pacinte_CodPacinte (CodPaciente) REFERENCES Paciente (CodPaciente);
 
- SHOW TABLES;
+ #1.1
