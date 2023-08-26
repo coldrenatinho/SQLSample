@@ -1,6 +1,14 @@
 #Esquema de banco a ser utilzado na aulas do Laboratório de Banco de Dados
 #RENATO ARAUJO DA SILVA
 #UNEMAT - UNIVERSIDADE DO ESTADO DO MATO GROSSO
+#https://github.com/coldrenatinho/
+#@coldrenatinho
+
+
+
+
+
+
 
 #TESTE
 
@@ -20,14 +28,6 @@ CREATE TABLE IF NOT EXISTS MunicipioCliente(
 );
 #Pedimos a alteração da tabela que vamos realizar crial a constraint <ALTER TABLE> {NOME TABELA} <ADD CONSTRAINT foreing key > {NOME DA CONTRAINT} ({Nome da tupla a ser referenciada}) <REFERENCES> {Nome da table de referencia "Primary key "};
  ALTER TABLE MunicipioCliente ADD constraint foreign key FK_Cliente_CodCliente (CodCliente) references Cliente (CodCliente);
- 
- 
- 
- 
- 
- 
- 
- 
  
  
  
@@ -93,4 +93,34 @@ CREATE TABLE IF NOT EXISTS Consulta(
 ALTER TABLE Consulta ADD constraint foreign key FK_Medico_CodMedico (CodMedico) REFERENCES Medico (CodMedico);
 ALTER TABLE Consulta ADD constraint foreign key FK_Pacinte_CodPacinte (CodPaciente) REFERENCES Paciente (CodPaciente);
 
- #1.1
+#Gerando um insert nas Tabelas Criadas acima
+
+INSERT INTO Paciente (Nome, RG, CPF, Sexo, DataNascimento, Logradouro, NumeroLogradouro, CEP, Bairro, Celular, NomeConvernio, CodMatriculConvenio)
+VALUES
+    ('Maria Silva', 12345678, 98765432, 'F', '1990-05-15', 'Rua A', 123, 12345678, 'Centro', 987654321, 'ConvenioSaude', 456),
+    ('João Santos', 87654321, 54321678, 'M', '1985-10-20', 'Av. B', 456, 87654321, 'Bairro1', 987654321, 'ConvenioMed', 789);
+    ('Ana Oliveira', 23456789, 87654321, 'F', '1988-02-28', 'Rua B', 456, 23456789, 'Bairro2', 876543210, 'PlanoVida', 123),
+    ('Pedro Almeida', 34567890, 76543210, 'M', '1995-11-10', 'Av. C', 789, 34567890, 'Centro', 765432109, 'ConvenioSaude', 234);
+
+INSERT INTO Medico (Nome, CRM, Especialidade, CodHorario, Celular, CelularRecado, Logradouro, NumeroLogradouro, CEP, Bairro)
+VALUES
+    ('Dr. Ana Souza', 123456, 'Cardiologia', 1, 987654321, 987654322, 'Rua X', 789, 98765432, 'Centro'),
+    ('Dr. Carlos Santos', 987654, 'Dermatologia', 2, 987654321, 987654322, 'Av. Y', 654, 87654321, 'Bairro2');
+    ('Dra. Luiza Rodrigues', 567890, 'Pediatria', 3, 876543210, 876543211, 'Rua Y', 987, 56789012, 'Bairro3'),
+    ('Dr. Marcelo Lima', 678901, 'Ortopedia', 4, 765432109, 765432210, 'Av. Z', 123, 45678901, 'Centro');
+
+INSERT INTO HorarioMedico (CodHorario, CodMedico, DataInicio, DataFim, DiaSemanaInicio, DiaSemanaFim, HoraEtranda, DataSaida)
+VALUES
+    (1, 1, '2023-09-01', '2023-12-31', 1, 5, '08:00:00', '17:00:00'),
+    (2, 2, '2023-09-01', '2023-12-31', 1, 5, '09:00:00', '18:00:00');
+     (3, 3, '2023-09-01', '2023-12-31', 1, 3, '10:00:00', '15:00:00'),
+    (4, 4, '2023-09-01', '2023-12-31', 3, 5, '12:00:00', '20:00:00');
+
+INSERT INTO Consulta (CodPaciente, CodMedico, DiaConsulta, StatusConsulta)
+VALUES
+    (1, 1, '2023-09-10 10:00:00', 'Atendido'),
+    (2, 2, '2023-09-12 14:30:00', 'Aberta');
+    (1, 3, '2023-09-15 11:30:00', 'Atendido'),
+    (3, 4, '2023-09-18 14:00:00', 'Aberta');
+
+#Se7e@D2012
