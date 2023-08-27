@@ -6,8 +6,6 @@
 
 
 
-
-
 /*
 
 #TESTE
@@ -128,21 +126,106 @@ system cls #Limpa a tela
 \! echo 'Ficha de atendimentos'; #Faz o print NO TERMINAL
 
 
------------------------INSERINDO VIEW-----------------------
+#-----------------------INSERINDO VIEW-----------------------
 
-CREATE VIEW ConsultaAgendada AS
-    SELECT c.CodConsulta, m.Nome AS NomeMedico, p.Nome AS NomePacinte, c.DiaConsulta, c.StatusConsulta
+CREATE OR REPLACE VIEW ConsultaAgendada AS
+    SELECT c.CodConsulta, m.Nome AS 'Nome Medico', m.Especialidade as 'Especialide', p.Nome AS 'Nome Pacinte', c.DiaConsulta as 'Data Consulta', c.StatusConsulta as 'Status da Consulta'
     FROM Consulta C
     INNER JOIN Medico m on
     m.CodMedico = c.CodMedico
     INNER JOIN Paciente p on 
     p.CodPaciente = c.CodPaciente;
 
------------------------INSERINDO VIEW-----------------------
+#-----------------------INSERINDO VIEW-----------------------
 
------------------------Retorno da View-----------------------
+
+
+#-----------------------Retorno da View-----------------------
 SELECT *
-FROM ConsultaAgendada
+FROM ConsultaAgendada;
+#-----------------------Retorno da View-----------------------
+#-----------------------FIM DA ATIVIDADE-----------------------
+
+
+#-----------------------INICIO ATIVIDADE 03-----------------------
+
+#----------------------------------------------
+#Atividade03
+#----------------------------------------------
+#----------------------------------------------
+#Novo Banco Atividade03
+#----------------------------------------------
+CREATE DATABASE IF NOT EXISTS Atividade03;
+
+USE Atividade03;
+
+#----------------------------------------------
+#Tabela Instrutor
+#----------------------------------------------
+CREATE TABLE IF NOT EXISTS Instrutor(
+    CodInstrutor INT PRIMARY KEY NOT NULL AUTO_INCREMENT;
+    RG int(9) NOT NULL UNIQUE,
+    Nome CHAR(200) NOT NULL,
+    DataNascimento DATE,
+    Titulacao INT
+);
+
+#----------------------------------------------
+#Tabela TelefoneInstrutor
+#----------------------------------------------
+CREATE TABLE IF NOT EXISTS TelefoneInstrutor(
+    Codtelefone INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    Numero int(9) NOT NULL,
+    Tipo VARCHAR(45),
+    CodInstrutor INT NOT NULL
+);
+
+#----------------------------------------------
+#Adição Chave Estrageira Verificando o ID do Instrutor
+#----------------------------------------------
+ALTER TABLE TelefoneInstrutor ADD CONSTRAINT FOREIGN KEY FK_Instrutor_CodInstrutor (CodInstrutor) REFERENCES Instrutor (CodInstrutor);
+
+#----------------------------------------------
+#Tabela Aluno
+#----------------------------------------------
+CREATE TABLE IF NOT EXISTS Aluno(
+    CodAluno INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    CodTurma int NOT NULL,
+    DataMatricula DATE NOT NULL,
+    Nome VARCHAR(200) NOT NULL,
+    Logradouro VARCHAR(200) NOT NULL,
+    NumeroLogradouro int(5),
+    Bairro VARCHAR(200) NOT NULL,
+    CEP INT,
+    Telefone INT,
+    TelefoneRecado int,
+    DataNascimento DATE NOT NULL,
+    Altura FLOAT NOT NULL,
+    Peso FLOAT NOT NULL
+);
+
+#----------------------------------------------
+#Tabela Atividade
+#----------------------------------------------
+CREATE IF NOT EXISTS Atividade(
+    CodAtividade INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    Descricao VARCHAR(100)
+);
+
+#----------------------------------------------
+#Tabela Turma
+#----------------------------------------------
+CREATE IF NOT EXISTS Turma(
+    CodTurma INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    Horario TIME NOT NULL,
+    Duracao INT NOT NULL,
+    DataInicio DATE NOT NULL,
+    DataFim DATE,
+    CodAtividade int NOT NULL,
+    CodInstrutor int NOT NULL,
+)
+
+
 
 
 
