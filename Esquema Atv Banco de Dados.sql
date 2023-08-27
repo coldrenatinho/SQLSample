@@ -267,7 +267,7 @@ ALTER TABLE Chamada ADD CONSTRAINT FOREIGN KEY FK_Matricula_CodMatricula (CodMat
 ALTER TABLE Chamada ADD CONSTRAINT FOREIGN KEY FK_Matricula_CodTurma (CodTurma) REFERENCES Matricula (CodTurma);
 
 #----------------------------------------------
-#inserção VIEW ConsultasAgendadas
+#inserção View Turma
 #----------------------------------------------
 
 USE Atividade03;
@@ -281,22 +281,22 @@ SELECT
     t.DataFim,
     a.Descricao AS Atividade,
     i.Nome AS Instrutor,
-    a.Nome AS Aluno,
-    a.DataMatricula,
-    a.Logradouro AS EnderecoAluno,
-    a.NumeroLogradouro AS NumeroEnderecoAluno,
-    a.Bairro AS BairroAluno,
-    a.CEP AS CEPAluno,
-    a.Telefone AS TelefoneAluno,
-    a.TelefoneRecado AS TelefoneRecadoAluno,
-    a.DataNascimento AS DataNascimentoAluno,
-    a.Altura AS AlturaAluno,
-    a.Peso AS PesoAluno
+    al.Nome AS Aluno,
+    al.DataMatricula,
+    al.Logradouro AS EnderecoAluno,
+    al.NumeroLogradouro AS NumeroEnderecoAluno,
+    al.Bairro AS BairroAluno,
+    al.CEP AS CEPAluno,
+    al.Telefone AS TelefoneAluno,
+    al.TelefoneRecado AS TelefoneRecadoAluno,
+    al.DataNascimento AS DataNascimentoAluno,
+    al.Altura AS AlturaAluno,
+    al.Peso AS PesoAluno
 FROM Turma t
 JOIN Atividade a ON t.CodAtividade = a.CodAtividade
 JOIN Instrutor i ON t.CodInstrutor = i.CodInstrutor
 JOIN Matricula m ON t.CodTurma = m.CodTurma
-JOIN Aluno a ON m.CodMatricula = a.CodMatricula;
+JOIN Aluno al ON m.CodMatricula = al.CodMatricula;
 
 
 
@@ -362,8 +362,9 @@ VALUES
 #\! echo 'Ficha de atendimentos'; #Faz o print no terminal
 
 #-----------------------Retorno da View-----------------------
+USE Atividade03;
 SELECT *
-FROM ViewConsulta;
+FROM ViewTurma;
 
 
 
