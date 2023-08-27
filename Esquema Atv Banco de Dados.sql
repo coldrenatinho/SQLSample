@@ -5,7 +5,7 @@
 #@coldrenatinho
  
 #-----------------------INICIO ATIVIDADE 02-----------------------
-#DROP DATABASE Atividade02; #REALIZAR TESTE DO SCRIP NO TERMINAL
+DROP DATABASE Atividade02; #REALIZAR TESTE DO SCRIP NO TERMINAL
 #----------------------------------------------
 #Novo Banco Atividade02
 #----------------------------------------------
@@ -162,7 +162,7 @@ USE Atividade03;
 #Tabela Instrutor
 #----------------------------------------------
 CREATE TABLE IF NOT EXISTS Instrutor(
-    CodInstrutor INT PRIMARY KEY NOT NULL AUTO_INCREMENT;
+    CodInstrutor INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     RG int(9) NOT NULL UNIQUE,
     Nome CHAR(200) NOT NULL,
     DataNascimento DATE,
@@ -206,7 +206,7 @@ CREATE TABLE IF NOT EXISTS Aluno(
 #----------------------------------------------
 #Tabela Atividade
 #----------------------------------------------
-CREATE IF NOT EXISTS Atividade(
+CREATE TABLE IF NOT EXISTS Atividade(
     CodAtividade INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     Descricao VARCHAR(100)
 );
@@ -214,26 +214,26 @@ CREATE IF NOT EXISTS Atividade(
 #----------------------------------------------
 #Tabela Turma
 #----------------------------------------------
-CREATE IF NOT EXISTS Turma(
+CREATE TABLE IF NOT EXISTS Turma(
     CodTurma INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     Horario TIME NOT NULL,
     Duracao INT NOT NULL,
     DataInicio DATE NOT NULL,
     DataFim DATE,
     CodAtividade int NOT NULL,
-    CodInstrutor int NOT NULL,
+    CodInstrutor int NOT NULL
 );
 
 #----------------------------------------------
 #Criação das restrição das chaves estrageiras
 #----------------------------------------------
-ALTER TABLE Turma ADD CONSTRAINT FOREIGN KEY foreing KEY FK_Cliente_CodAtividade (CodAtividade) REFERENCES Atividade (CodAtividade);
+ALTER TABLE Turma ADD CONSTRAINT FOREIGN KEY FK_Cliente_CodAtividade (CodAtividade) REFERENCES Atividade (CodAtividade);
 ALTER TABLE Turma ADD CONSTRAINT FOREIGN KEY FK_Instrutor_CodInstrutor (CodAtividade) REFERENCES Instrutor (CodInstutor);
 
 #----------------------------------------------
 #Tabela Matricula
 #----------------------------------------------
-CREATE IF NOT EXISTS Matriculas(
+CREATE TABLE IF NOT EXISTS Matriculas(
     CodMatricula INT NOT NULL,
     CodTurma INT NOT NULL
 );
@@ -250,9 +250,9 @@ ALTER TABLE Turma ADD CONSTRAINT FOREIGN KEY FK_Turma_CodTurma (CodTurma) REFERE
 CREATE TABLE IF NOT EXISTS Chamada(
     CodChamada INT NOT NULL,
     Data DATE,
-    PRESENTE CHAR(1) #Valores S = Sim, N = Não
+    PRESENTE CHAR(1), #Valores S = Sim, N = Não
     CodMatricula INT NOT NULL,
-    CodTurma INT NOT NULL,
+    CodTurma INT NOT NULL
 );
 #----------------------------------------------
 #RESTRIÇÃO DE CHAVE ESTRANGEIRA NA TABELA CHAMADA
