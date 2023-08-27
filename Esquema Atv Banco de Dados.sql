@@ -185,25 +185,6 @@ CREATE TABLE IF NOT EXISTS TelefoneInstrutor(
 ALTER TABLE TelefoneInstrutor ADD CONSTRAINT FOREIGN KEY FK_Instrutor_CodInstrutor (CodInstrutor) REFERENCES Instrutor (CodInstrutor);
 
 #----------------------------------------------
-#Tabela Aluno
-#----------------------------------------------
-CREATE TABLE IF NOT EXISTS Aluno(
-    CodMatricula INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    CodTurma INT NOT NULL,
-    DataMatricula DATE NOT NULL,
-    Nome VARCHAR(200) NOT NULL,
-    Logradouro VARCHAR(200) NOT NULL,
-    NumeroLogradouro int(5),
-    Bairro VARCHAR(200) NOT NULL,
-    CEP INT,
-    Telefone INT,
-    TelefoneRecado int,
-    DataNascimento DATE NOT NULL,
-    Altura FLOAT NOT NULL,
-    Peso FLOAT NOT NULL
-);
-
-#----------------------------------------------
 #Tabela Atividade
 #----------------------------------------------
 CREATE TABLE IF NOT EXISTS Atividade(
@@ -225,10 +206,35 @@ CREATE TABLE IF NOT EXISTS Turma(
 );
 
 #----------------------------------------------
-#Criação das restrição das chaves estrageiras
+#Criação das restrição das chaves estrageirasCriação das restrição das chaves estrageiras
 #----------------------------------------------
 ALTER TABLE Turma ADD CONSTRAINT FOREIGN KEY FK_Atividade_CodAtividade (CodAtividade) REFERENCES Atividade (CodAtividade);
 ALTER TABLE Turma ADD CONSTRAINT FOREIGN KEY FK_Instrutor_CodInstrutor (CodInstrutor) REFERENCES Instrutor (CodInstrutor);
+
+#----------------------------------------------
+#Tabela Aluno
+#----------------------------------------------
+CREATE TABLE IF NOT EXISTS Aluno(
+    CodMatricula INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    CodTurma INT NOT NULL,
+    DataMatricula DATE NOT NULL,
+    Nome VARCHAR(200) NOT NULL,
+    Logradouro VARCHAR(200) NOT NULL,
+    NumeroLogradouro int(5),
+    Bairro VARCHAR(200) NOT NULL,
+    CEP INT,
+    Telefone INT,
+    TelefoneRecado int,
+    DataNascimento DATE NOT NULL,
+    Altura FLOAT NOT NULL,
+    Peso FLOAT NOT NULL
+);
+#----------------------------------------------
+#Criação das restrição das chaves estrageiras na tabela Aluno
+#----------------------------------------------
+ALTER TABLE Aluno ADD CONSTRAINT FOREIGN KEY FK_Turma_CodTurma (Codturma) REFERENCES Turma (CodTurma);
+
+
 
 #----------------------------------------------
 #Tabela Matricula
@@ -262,19 +268,16 @@ ALTER TABLE Chamada ADD CONSTRAINT FOREIGN KEY FK_Matricula_CodTurma (CodTurma) 
 
 
 #-----------------------GERANDO INSERT NO BANCO 'Atividade03'-----------------------
-
 USE Atividade03;
-
 #----------------------------------------------
-#inserção tabela Instrutor
+#-- Inserção de dados na tabela Instrutor
 #----------------------------------------------
 INSERT INTO Instrutor (RG, Nome, DataNascimento, Titulacao)
 VALUES
     (123456789, 'João Silva', '1980-01-15', 2),
     (987654321, 'Maria Santos', '1985-05-20', 1);
-
 #----------------------------------------------
-#inserção tabela TelefoneInstrutor
+#-- Inserção de dados na tabela TelefoneInstrutor
 #----------------------------------------------
 INSERT INTO TelefoneInstrutor (Numero, Tipo, CodInstrutor)
 VALUES
@@ -282,17 +285,7 @@ VALUES
     (987654321, 'Fixo', 2);
 
 #----------------------------------------------
-#inserção tabela Aluno
-#----------------------------------------------
-INSERT INTO Aluno (CodTurma, DataMatricula, Nome, Logradouro, NumeroLogradouro, Bairro, CEP, Telefone, TelefoneRecado, DataNascimento, Altura, Peso)
-VALUES
-    (1, '2023-01-10', 'Ana Oliveira', 'Rua A', 123, 'Centro', 12345678, 987654321, 987654322, '1995-08-25', 1.70, 65),
-    (2, '2023-01-10', 'Pedro Almeida', 'Av. B', 456, 'Bairro1', 87654321, 987654321, 987654322, '1998-03-15', 1.80, 70),
-    (1, '2023-01-15', 'Carlos Fernandes', 'Rua C', 789, 'Bairro2', 23456789, 876543210, 876543211, '1994-11-10', 1.75, 80),
-    (2, '2023-01-15', 'Mariana Lima', 'Av. D', 567, 'Centro', 34567890, 765432109, 765432210, '1997-06-20', 1.68, 60);
-
-#----------------------------------------------
-#inserção tabela Atividade
+#-- Inserção de dados na tabela Atividade
 #----------------------------------------------
 INSERT INTO Atividade (Descricao)
 VALUES
@@ -300,7 +293,7 @@ VALUES
     ('Yoga');
 
 #----------------------------------------------
-#inserção tabela Turma
+#Inserção de dados na tabela Turma
 #----------------------------------------------
 INSERT INTO Turma (Horario, Duracao, DataInicio, DataFim, CodAtividade, CodInstrutor)
 VALUES
@@ -308,22 +301,28 @@ VALUES
     ('15:00:00', 90, '2023-03-01', '2023-06-01', 2, 2);
 
 #----------------------------------------------
-#inserção tabela Matricula
+#-- Inserção de dados na tabela Aluno
+#----------------------------------------------
+INSERT INTO Aluno (CodTurma, DataMatricula, Nome, Logradouro, NumeroLogradouro, Bairro, CEP, Telefone, TelefoneRecado, DataNascimento, Altura, Peso)
+VALUES
+    (1, '2023-01-10', 'Ana Oliveira', 'Rua A', 123, 'Centro', 12345678, 987654321, 987654322, '1995-08-25', 1.70, 65),
+    (2, '2023-01-10', 'Pedro Almeida', 'Av. B', 456, 'Bairro1', 87654321, 987654321, 987654322, '1998-03-15', 1.80, 70);
+
+#----------------------------------------------
+#-- Inserção de dados na tabela Matricula
 #----------------------------------------------
 INSERT INTO Matricula (CodMatricula, CodTurma)
 VALUES
     (1, 1),
-    (2, 2),
-    (1, 2),
-    (2, 1);
+    (2, 2);
 
 #----------------------------------------------
-#inserção tabela Chamada
+#-- Inserção de dados na tabela Chamada
 #----------------------------------------------
 INSERT INTO Chamada (CodChamada, Data, PRESENTE, CodMatricula, CodTurma)
 VALUES
     (1, '2023-02-05', 'S', 1, 1),
-    (2, '2023-03-10', 'S', 2, 2),
-    (3, '2023-02-05', 'S', 1, 2),
-    (4, '2023-03-10', 'S', 2, 1);
+    (2, '2023-03-10', 'S', 2, 2);
 
+
+#-----------------------FIM ATIVIDADE 03-----------------------
