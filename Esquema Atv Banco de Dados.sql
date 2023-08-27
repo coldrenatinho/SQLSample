@@ -87,7 +87,7 @@ ALTER TABLE Consulta ADD constraint foreign key FK_Pacinte_CodPacinte (CodPacien
 #----------------------------------------------
 #inserção VIEW ConsultasAgendadas
 #----------------------------------------------
-CREATE OR REPLACE VIEW ConsultaAgendada AS
+CREATE OR REPLACE VIEW ViewConsulta AS
     SELECT c.CodConsulta, m.Nome AS 'Nome Medico', m.Especialidade as 'Especialide', p.Nome AS 'Nome Pacinte', c.DiaConsulta as 'Data Consulta', c.StatusConsulta as 'Status da Consulta'
     FROM Consulta C
     INNER JOIN Medico m on
@@ -145,7 +145,7 @@ VALUES
 
 #-----------------------Retorno da View-----------------------
 SELECT *
-FROM ConsultaAgendada;
+FROM ViewConsulta;
 
 #-----------------------FIM DA ATIVIDADE-----------------------
 
@@ -266,18 +266,51 @@ CREATE TABLE IF NOT EXISTS Chamada(
 ALTER TABLE Chamada ADD CONSTRAINT FOREIGN KEY FK_Matricula_CodMatricula (CodMatricula) REFERENCES Matricula (CodMatricula);
 ALTER TABLE Chamada ADD CONSTRAINT FOREIGN KEY FK_Matricula_CodTurma (CodTurma) REFERENCES Matricula (CodTurma);
 
+#----------------------------------------------
+#inserção VIEW ConsultasAgendadas
+#----------------------------------------------
+
+USE Atividade03;
+
+CREATE OR REPLACE VIEW ViewTurma AS
+SELECT
+    t.CodTurma,
+    t.Horario,
+    t.Duracao,
+    t.DataInicio,
+    t.DataFim,
+    a.Descricao AS Atividade,
+    i.Nome AS Instrutor,
+    a.Nome AS Aluno,
+    a.DataMatricula,
+    a.Logradouro AS EnderecoAluno,
+    a.NumeroLogradouro AS NumeroEnderecoAluno,
+    a.Bairro AS BairroAluno,
+    a.CEP AS CEPAluno,
+    a.Telefone AS TelefoneAluno,
+    a.TelefoneRecado AS TelefoneRecadoAluno,
+    a.DataNascimento AS DataNascimentoAluno,
+    a.Altura AS AlturaAluno,
+    a.Peso AS PesoAluno
+FROM Turma t
+JOIN Atividade a ON t.CodAtividade = a.CodAtividade
+JOIN Instrutor i ON t.CodInstrutor = i.CodInstrutor
+JOIN Matricula m ON t.CodTurma = m.CodTurma
+JOIN Aluno a ON m.CodMatricula = a.CodMatricula;
+
+
 
 #-----------------------GERANDO INSERT NO BANCO 'Atividade03'-----------------------
 USE Atividade03;
 #----------------------------------------------
-#-- Inserção de dados na tabela Instrutor
+#-Inserção de dados na tabela Instrutor
 #----------------------------------------------
 INSERT INTO Instrutor (RG, Nome, DataNascimento, Titulacao)
 VALUES
     (123456789, 'João Silva', '1980-01-15', 2),
     (987654321, 'Maria Santos', '1985-05-20', 1);
 #----------------------------------------------
-#-- Inserção de dados na tabela TelefoneInstrutor
+#Inserção de dados na tabela TelefoneInstrutor
 #----------------------------------------------
 INSERT INTO TelefoneInstrutor (Numero, Tipo, CodInstrutor)
 VALUES
@@ -285,7 +318,7 @@ VALUES
     (987654321, 'Fixo', 2);
 
 #----------------------------------------------
-#-- Inserção de dados na tabela Atividade
+#Inserção de dados na tabela Atividade
 #----------------------------------------------
 INSERT INTO Atividade (Descricao)
 VALUES
@@ -301,7 +334,7 @@ VALUES
     ('15:00:00', 90, '2023-03-01', '2023-06-01', 2, 2);
 
 #----------------------------------------------
-#-- Inserção de dados na tabela Aluno
+#Inserção de dados na tabela Aluno
 #----------------------------------------------
 INSERT INTO Aluno (CodTurma, DataMatricula, Nome, Logradouro, NumeroLogradouro, Bairro, CEP, Telefone, TelefoneRecado, DataNascimento, Altura, Peso)
 VALUES
@@ -309,7 +342,7 @@ VALUES
     (2, '2023-01-10', 'Pedro Almeida', 'Av. B', 456, 'Bairro1', 87654321, 987654321, 987654322, '1998-03-15', 1.80, 70);
 
 #----------------------------------------------
-#-- Inserção de dados na tabela Matricula
+#Inserção de dados na tabela Matricula
 #----------------------------------------------
 INSERT INTO Matricula (CodMatricula, CodTurma)
 VALUES
@@ -317,12 +350,21 @@ VALUES
     (2, 2);
 
 #----------------------------------------------
-#-- Inserção de dados na tabela Chamada
+#Inserção de dados na tabela Chamada
 #----------------------------------------------
 INSERT INTO Chamada (CodChamada, Data, PRESENTE, CodMatricula, CodTurma)
 VALUES
     (1, '2023-02-05', 'S', 1, 1),
     (2, '2023-03-10', 'S', 2, 2);
+
+#-----------------------LIMPEZA DO TERMINAL----------------------- 
+#system cls #Limpa a tela terminal
+#\! echo 'Ficha de atendimentos'; #Faz o print no terminal
+
+#-----------------------Retorno da View-----------------------
+SELECT *
+FROM ViewConsulta;
+
 
 
 #-----------------------FIM ATIVIDADE 03-----------------------
