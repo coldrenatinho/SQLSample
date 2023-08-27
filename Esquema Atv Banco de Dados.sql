@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS HorarioMedico(
 );
 
 #----------------------------------------------
-#Adição restrição por chave estrangeira na tabela HorarioMedico
+#inserção restrição por chave estrangeira na tabela HorarioMedico
 #----------------------------------------------
 ALTER TABLE HorarioMedico ADD constraint foreign key FK_Medico_CodMedico (CodMedico) REFERENCES Medico (CodMedico);
 
@@ -79,13 +79,13 @@ CREATE TABLE IF NOT EXISTS Consulta(
 );
 
 #----------------------------------------------
-#Adição restrição por chave estrangeira na tabela Consutla
+#inserção restrição por chave estrangeira na tabela Consutla
 #----------------------------------------------
 ALTER TABLE Consulta ADD constraint foreign key FK_Medico_CodMedico (CodMedico) REFERENCES Medico (CodMedico);
 ALTER TABLE Consulta ADD constraint foreign key FK_Pacinte_CodPacinte (CodPaciente) REFERENCES Paciente (CodPaciente);
 
 #----------------------------------------------
-#Adição VIEW ConsultasAgendadas
+#inserção VIEW ConsultasAgendadas
 #----------------------------------------------
 CREATE OR REPLACE VIEW ConsultaAgendada AS
     SELECT c.CodConsulta, m.Nome AS 'Nome Medico', m.Especialidade as 'Especialide', p.Nome AS 'Nome Pacinte', c.DiaConsulta as 'Data Consulta', c.StatusConsulta as 'Status da Consulta'
@@ -98,7 +98,7 @@ CREATE OR REPLACE VIEW ConsultaAgendada AS
 #-----------------------GERANDO INSERT NO BANCO 'Atividade02'-----------------------
 
 #----------------------------------------------
-#Adição tabela Paciente
+#inserção tabela Paciente
 #----------------------------------------------
 INSERT INTO Paciente (Nome, RG, CPF, Sexo, DataNascimento, Logradouro, NumeroLogradouro, CEP, Bairro, Celular, NomeConvernio, CodMatriculConvenio)
 VALUES
@@ -108,7 +108,7 @@ VALUES
     ('Pedro Almeida', 34567890, 76543210, 'M', '1995-11-10', 'Av. C', 789, 34567890, 'Centro', 765432109, 'ConvenioSaude', 234);
 
 #----------------------------------------------
-#Adição tabela Medico
+#inserção tabela Medico
 #----------------------------------------------
 INSERT INTO Medico (Nome, CRM, Especialidade, CodHorario, Celular, CelularRecado, Logradouro, NumeroLogradouro, CEP, Bairro)
 VALUES
@@ -118,7 +118,7 @@ VALUES
     ('Dr. Marcelo Lima', 678901, 'Ortopedia', 4, 765432109, 765432210, 'Av. Z', 123, 45678901, 'Centro');
 
 #----------------------------------------------
-#Adição tabela HorarioMedico
+#inserção tabela HorarioMedico
 #----------------------------------------------
 INSERT INTO HorarioMedico (CodHorario, CodMedico, DataInicio, DataFim, DiaSemanaInicio, DiaSemanaFim, HoraEtranda, DataSaida)
 VALUES
@@ -128,7 +128,7 @@ VALUES
     (4, 4, '2023-09-01', '2023-12-31', 3, 5, '12:00:00', '20:00:00');
 
 #----------------------------------------------
-#Adição tabela Consutla
+#inserção tabela Consutla
 #----------------------------------------------
 INSERT INTO Consulta (CodPaciente, CodMedico, DiaConsulta, StatusConsulta)
 VALUES
@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS TelefoneInstrutor(
 );
 
 #----------------------------------------------
-#Adição Chave Estrageira Verificando o ID do Instrutor
+#inserção Chave Estrageira Verificando o ID do Instrutor
 #----------------------------------------------
 ALTER TABLE TelefoneInstrutor ADD CONSTRAINT FOREIGN KEY FK_Instrutor_CodInstrutor (CodInstrutor) REFERENCES Instrutor (CodInstrutor);
 
@@ -259,3 +259,71 @@ CREATE TABLE IF NOT EXISTS Chamada(
 #----------------------------------------------
 ALTER TABLE Chamada ADD CONSTRAINT FOREIGN KEY FK_Matricula_CodMatricula (CodMatricula) REFERENCES Matricula (CodMatricula);
 ALTER TABLE Chamada ADD CONSTRAINT FOREIGN KEY FK_Matricula_CodTurma (CodTurma) REFERENCES Matricula (CodTurma);
+
+
+#-----------------------GERANDO INSERT NO BANCO 'Atividade03'-----------------------
+
+USE Atividade03;
+
+#----------------------------------------------
+#inserção tabela Instrutor
+#----------------------------------------------
+INSERT INTO Instrutor (RG, Nome, DataNascimento, Titulacao)
+VALUES
+    (123456789, 'João Silva', '1980-01-15', 2),
+    (987654321, 'Maria Santos', '1985-05-20', 1);
+
+#----------------------------------------------
+#inserção tabela TelefoneInstrutor
+#----------------------------------------------
+INSERT INTO TelefoneInstrutor (Numero, Tipo, CodInstrutor)
+VALUES
+    (123456789, 'Celular', 1),
+    (987654321, 'Fixo', 2);
+
+#----------------------------------------------
+#inserção tabela Aluno
+#----------------------------------------------
+INSERT INTO Aluno (CodTurma, DataMatricula, Nome, Logradouro, NumeroLogradouro, Bairro, CEP, Telefone, TelefoneRecado, DataNascimento, Altura, Peso)
+VALUES
+    (1, '2023-01-10', 'Ana Oliveira', 'Rua A', 123, 'Centro', 12345678, 987654321, 987654322, '1995-08-25', 1.70, 65),
+    (2, '2023-01-10', 'Pedro Almeida', 'Av. B', 456, 'Bairro1', 87654321, 987654321, 987654322, '1998-03-15', 1.80, 70),
+    (1, '2023-01-15', 'Carlos Fernandes', 'Rua C', 789, 'Bairro2', 23456789, 876543210, 876543211, '1994-11-10', 1.75, 80),
+    (2, '2023-01-15', 'Mariana Lima', 'Av. D', 567, 'Centro', 34567890, 765432109, 765432210, '1997-06-20', 1.68, 60);
+
+#----------------------------------------------
+#inserção tabela Atividade
+#----------------------------------------------
+INSERT INTO Atividade (Descricao)
+VALUES
+    ('Natação'),
+    ('Yoga');
+
+#----------------------------------------------
+#inserção tabela Turma
+#----------------------------------------------
+INSERT INTO Turma (Horario, Duracao, DataInicio, DataFim, CodAtividade, CodInstrutor)
+VALUES
+    ('09:00:00', 60, '2023-02-01', '2023-05-01', 1, 1),
+    ('15:00:00', 90, '2023-03-01', '2023-06-01', 2, 2);
+
+#----------------------------------------------
+#inserção tabela Matricula
+#----------------------------------------------
+INSERT INTO Matricula (CodMatricula, CodTurma)
+VALUES
+    (1, 1),
+    (2, 2),
+    (1, 2),
+    (2, 1);
+
+#----------------------------------------------
+#inserção tabela Chamada
+#----------------------------------------------
+INSERT INTO Chamada (CodChamada, Data, PRESENTE, CodMatricula, CodTurma)
+VALUES
+    (1, '2023-02-05', 'S', 1, 1),
+    (2, '2023-03-10', 'S', 2, 2),
+    (3, '2023-02-05', 'S', 1, 2),
+    (4, '2023-03-10', 'S', 2, 1);
+
