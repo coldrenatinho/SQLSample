@@ -223,7 +223,12 @@ CREATE IF NOT EXISTS Turma(
     DataFim DATE,
     CodAtividade int NOT NULL,
     CodInstrutor int NOT NULL,
-)
+);
+#----------------------------------------------
+#Criação das restrição das chaves estrageiras
+#----------------------------------------------
+ALTER TABLE Turma ADD CONSTRAINT FK_Cliente_CodAtividade (CodAtividade) REFERENCES Atividade (CodAtividade);
+ALTER TABLE Turma ADD CONSTRAINT FK_Instrutor_CodInstrutor (CodAtividade) REFERENCES Instrutor (CodInstutor);
 
 
 
