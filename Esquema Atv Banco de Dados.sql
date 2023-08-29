@@ -369,3 +369,47 @@ FROM ViewTurma;
 
 
 #-----------------------FIM ATIVIDADE 03-----------------------
+
+
+
+#-----------------------INICIO ATIVIDADE 04-----------------------
+DROP DATABASE Atividade04; #REALIZAR TESTE DO SCRIP NO TERMINAL
+#----------------------------------------------
+#Novo Banco Atividade04
+#----------------------------------------------
+CREATE DATABASE IF NOT EXISTS Atividade04;
+
+ USE Atividade04;
+
+ /*
+ CINEMA=
+ SALA
+ 
+ FILME
+ HORARIOS
+
+
+ FILMES>SALAS>HORARIOS
+
+sala=
+ ID > NOME
+capacidade
+ 
+
+ filme=
+
+ nome lingua original
+nome liguagem estrangeira
+diretor
+ano de laçamento
+tipo
+sinopse
+
+Não existem dois filmes com nome em portugues e ano
+
+premiação=
+entidade
+ano
+tipo
+
+ */
