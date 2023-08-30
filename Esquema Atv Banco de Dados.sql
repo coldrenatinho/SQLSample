@@ -379,26 +379,23 @@ DROP DATABASE Atividade04; #REALIZAR TESTE DO SCRIP NO TERMINAL
 #----------------------------------------------
 CREATE DATABASE IF NOT EXISTS Atividade04;
 
- USE Atividade04;
+USE Atividade04;
 
  /*
- CINEMA=
+ CINEMA
  SALA
- 
  FILME
  HORARIOS
-
 
  FILMES>SALAS>HORARIOS
 
 sala=
- ID > NOME
+ID > NOME
 capacidade
- 
 
- filme=
+filme=
 
- nome lingua original
+nome lingua original
 nome liguagem estrangeira
 diretor
 ano de laçamento
@@ -408,8 +405,82 @@ sinopse
 Não existem dois filmes com nome em portugues e ano
 
 premiação=
+
 entidade
 ano
 tipo
 
+
+
+Horários
  */
+
+CREATE TABLE IF NOT EXISTS Filme(
+    CodFilme int PRIMARY KEY NOT NULL,
+    NomeOriginal VARCHAR(200) NOT NULL,
+    NomeExibicao VARCHAR(200),
+    DataEtreia DATE,
+    AnoLancamento DATE NOT NULL,
+    CodDiretor int NOT NULL,
+    Tipo int NOT NULL,
+    Sinopse VARCHAR(400)
+);
+
+CREATE TABLE IF NOT EXISTS HorariosFilme(
+    CodHorario INT NOT NULL,
+    Horario TIME INT NOT NULL,
+    Descricao VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS Funcionario(
+    Codfuncionario INT PRIMARY KEY NOT NULL AUTO_INCREMENTE,
+    Nome VARCHAR(200) NOT NULL,
+    DataAdimissao DATE NOT NULL,
+    NumeroCarteiraTabalho INT NOT NULL UNIQUE,
+    Salario FLOAT NOT NULL
+)
+
+CREATE TABLE IF NOT EXISTS Escala(
+    Codfuncionario int NOT NULL,
+    CodHorario INT NOT NULL,
+    CodSala INT NOT NULL,
+)
+
+ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_Funcionario_CodFuncionario (Codfuncionario) REFERENCES Funcionario (Codfuncionario);
+ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_HorariosFilmes_CodHorariio (CodHorario) REFERENCES HorariosFilme (CodHorario);
+ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FL_Sala_CodSala (CodSala) REFERENCES Horarios (CodHorario);
+
+
+CREATE TABLE IF NOT EXISTS Diretor(
+    CodDiretor INT PRIMARY KEY NOT NULL,
+    Nome VARCHAR(300) NOT NULL,
+    AnoNascimento DATE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Premiacao(
+    CodPremiacao int PRIMARY KEY
+    Nome VARCHAR(200) NOT NULL,
+    AnoPremiacao DATE NOT NULL,
+)
+
+CREATE TABLE IF NOT EXISTS FilmePremiacao(
+    CodFilme INT NOT NULL,
+    CodPremiacao INT NOT NULL
+    Classe INT NOT NULL,
+    Indicado VARCHAR(200)
+)
+
+
+CREATE TABLE IF NOT EXISTS Sala(
+    CodSala INT PRIMARY KEY NOT NULL,
+    NomeSala VARCHAR(200),
+    Capacidade INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS 
+
+
+CREATE TABLE IF NOT EXISTS HorarioSala(
+    
+)
+
