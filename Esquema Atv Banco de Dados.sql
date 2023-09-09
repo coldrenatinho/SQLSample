@@ -377,9 +377,9 @@ DROP DATABASE Atividade04; #REALIZAR TESTE DO SCRIP NO TERMINAL
 #----------------------------------------------
 #Novo Banco Atividade04
 #----------------------------------------------
-CREATE DATABASE IF NOT EXISTS Atividade04;
-
+CREATE DATABASE Atividade04;
 USE Atividade04;
+
 
  /*
  CINEMA
@@ -416,13 +416,13 @@ Horários
  */
 
 CREATE TABLE IF NOT EXISTS Diretor(
-    CodDiretor INT PRIMARY KEY NOT NULL,
+    CodDiretor INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     Nome VARCHAR(300) NOT NULL,
     AnoNascimento DATE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Filme(
-    CodFilme INT PRIMARY KEY NOT NULL,
+    CodFilme INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     NomeOriginal VARCHAR(200) NOT NULL,
     NomeExibicao VARCHAR(200),
     DataEtreia DATE,
@@ -432,25 +432,30 @@ CREATE TABLE IF NOT EXISTS Filme(
     Sinopse VARCHAR(400)
 );
 
-ALTER TABLE FILME ADD CONSTRAIT FOREIGN KEY FK_Diretor_CodDiretor (CodDiretor) REFERENCES Diretor (CodDiretor);
+ALTER TABLE FILME ADD CONSTRAINT FOREIGN KEY FK_Diretor_CodDiretor (CodDiretor) REFERENCES Diretor (CodDiretor);
 
 
 CREATE TABLE IF NOT EXISTS Premiacao(
-    CodPremiacao int PRIMARY KEY
+    CodPremiacao int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     Nome VARCHAR(200) NOT NULL,
     AnoPremiacao DATE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS FilmePremiacao(
     CodFilme INT NOT NULL,
-    CodPremiacao INT NOT NULL
+    CodPremiacao INT NOT NULL,
     Classe INT NOT NULL,
     Indicado VARCHAR(200)
 );
 
 ALTER TABLE FilmePremiacao ADD CONSTRAINT FOREIGN KEY FK_Filme_CodFilme (CodFilme) REFERENCES FILME (CodFilme);
-ALTER TABLE FilmesPremicao ADD CONSTRAINT FOREIGN KEY FK_Premiacao_CodPremiacao (CodPremiacao) REFERENCES Premiacao (CodPremiacao);
+ALTER TABLE FilmePremiacao ADD CONSTRAINT FOREIGN KEY FK_Premiacao_CodPremiacao (CodPremiacao) REFERENCES Premiacao (CodPremiacao);
 
+CREATE TABLE IF NOT EXISTS Horario(
+	CodHorario INT PRIMARY KEY NOT NULL,
+    Horario TIME NOT NULL,
+    Descricao VARCHAR(100) NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS Sala(
     CodSala INT PRIMARY KEY NOT NULL,
@@ -458,29 +463,32 @@ CREATE TABLE IF NOT EXISTS Sala(
     Capacidade INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Funcionario(
-    Codfuncionario INT PRIMARY KEY NOT NULL AUTO_INCREMENTE,
-    Nome VARCHAR(200) NOT NULL,
-    DataAdimissao DATE NOT NULL,
-    NumeroCarteiraTabalho INT NOT NULL UNIQUE,
-    Salario FLOAT NOT NULL
-)
-
-CREATE TABLE IF NOT EXISTS Escala(
-    CodFuncionario INT NOT NULL,
-    CodHorario INT NOT NULL,
-    CodSala INT NOT NULL,
-)
-
-ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_Funcionario_CodFuncionario (Codfuncionario) REFERENCES Funcionario (Codfuncionario);
-ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_HorariosFilmes_CodHorariio (CodHorario) REFERENCES HorariosExibicao (CodHorario);
-ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FL_Sala_CodSala (CodSala) REFERENCES Horarios (CodHorario);
-
-
-CREATE TABLE IF NOT EXISTS FimeExibicao(
+CREATE TABLE IF NOT EXISTS FilmeExibicao(
     CodSala INT NOT NULL,
     CodFilme INT NULL NULL,
     CodHorario INT NOT NULL
 );
 
-ALTER TABLE FilmeExibicao ADD CONSTRAIT FOREIGN KEY FK_Horario_CodSala (Cod)
+ALTER TABLE FilmeExibicao ADD CONSTRAINT FOREIGN KEY FK_Sala_CodSala (CodSala) REFERENCES Sala (CodSala);
+ALTER TABLE FilmeExibicao ADD CONSTRAINT FOREIGN KEY FK_Filme_CodFilme (CodSala) REFERENCES Filme (CodFilme);
+ALTER TABLE FilmeExibicao ADD CONSTRAINT FOREIGN KEY FK_horario_CodHorario (CodHorario) REFERENCES Horario (CodHorario);
+
+
+CREATE TABLE IF NOT EXISTS Funcionario(
+    Codfuncionario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    Nome VARCHAR(200) NOT NULL,
+    DataAdimissao DATE NOT NULL,
+    NumeroCarteiraTabalho INT NOT NULL UNIQUE,
+    SalarioInicial FLOAT NOT NULL,
+    Salario FLOAT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Escala(
+    CodFuncionario INT NOT NULL,
+    CodHorario INT NOT NULL,
+    CodSala INT NOT NULL
+);
+
+ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_Funcionario_CodFuncionario (Codfuncionario) REFERENCES Funcionario (Codfuncionario);
+ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_Sala_CodSala (CodSala) REFERENCES Sala (CodSala);
+ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_FilmeExebicao_CodHorario (CodHorario) REFERENCES FilmeExibicao (CodHorario);
