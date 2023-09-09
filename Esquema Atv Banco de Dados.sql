@@ -510,71 +510,92 @@ ALTER TABLE FUNCAO ADD CONSTRAINT FOREIGN KEY FK_Escala_CodFuncionario (CodFunci
 
 #-----------------------GERANDO INSERT NO BANCO 'Atividade0'-----------------------
 
-
+#----------------------------------------------
 #Inserir dados na tabela Diretor
+#----------------------------------------------
 INSERT INTO Diretor (Nome, AnoNascimento)
 VALUES
     ('Diretor 1', '1990-01-01'),
     ('Diretor 2', '1985-02-15'),
     ('Diretor 3', '1978-08-20');
 
+#----------------------------------------------
 #Inserir dados na tabela Filme
+#----------------------------------------------
 INSERT INTO Filme (NomeOriginal, NomeExibicao, DataEtreia, AnoLancamento, CodDiretor, Tipo, Sinopse)
 VALUES
     ('Filme 1', 'Filme Exibição 1', '2023-03-10', '2023-03-05', 1, 1, 'Sinopse do Filme 1'),
     ('Filme 2', 'Filme Exibição 2', '2023-04-15', '2023-04-10', 2, 2, 'Sinopse do Filme 2'),
     ('Filme 3', 'Filme Exibição 3', '2023-05-20', '2023-05-15', 3, 1, 'Sinopse do Filme 3');
 
+#----------------------------------------------
 #Inserir dados na tabela Premiacao
+#----------------------------------------------
 INSERT INTO Premiacao (Nome, AnoPremiacao)
 VALUES
     ('Oscar', '2023-02-28'),
     ('Globo de Ouro', '2023-01-15'),
     ('Festival de Cannes', '2023-05-25');
 
+#----------------------------------------------
 #Inserir dados na tabela FilmePremiacao
+#----------------------------------------------
 INSERT INTO FilmePremiacao (CodFilme, CodPremiacao, Classe, Indicado)
 VALUES
     (1, 1, 1, 'Sim'),
     (2, 1, 2, 'Não'),
     (3, 3, 1, 'Sim');
 
+#----------------------------------------------
 #Inserir dados na tabela Horario
+#----------------------------------------------
 INSERT INTO Horario (CodHorario, Horario, Descricao)
 VALUES
     (1, '14:00:00', 'Matinê'),
     (2, '19:30:00', 'Noite'),
     (3, '22:00:00', 'Madrugada');
 
+#----------------------------------------------
 #Inserir dados na tabela Sala
+#----------------------------------------------
 INSERT INTO Sala (NomeSala, Capacidade)
 VALUES
     ('Sala 1', 100),
     ('Sala 2', 80),
     ('Sala 3', 120);
 
+#----------------------------------------------
 #Inserir dados na tabela FilmeExibicao
+#----------------------------------------------
 INSERT INTO FilmeExibicao (CodSala, CodFilme, CodHorario)
 VALUES
     (1, 1, 1),
     (2, 2, 2),
     (3, 3, 3);
 
+#----------------------------------------------
 #Inserir dados na tabela Funcionario
+#----------------------------------------------
 INSERT INTO Funcionario (Nome, CPF, NomeSocial, DataAdimissao, NumeroCarteiraTabalho, SalarioInicial, Salario)
 VALUES
     ('Funcionario 1', 123456789, 'Nome Social 1', '2023-01-10', 101, 2500.00, 2800.00),
     ('Funcionario 2', 234567890, 'Nome Social 2', '2023-02-15', 102, 2600.00, 2900.00),
     ('Funcionario 3', 345678901, 'Nome Social 3', '2023-03-20', 103, 2700.00, 3000.00);
 
+
+#----------------------------------------------
 #Inserir dados na tabela Escala
+#----------------------------------------------
 INSERT INTO Escala (CodFuncionario, CodHorario, CodSala, CodFuncao)
 VALUES
     (1, 1, 1, NULL),
     (2, 2, 2, NULL),
     (3, 3, 3, NULL);
 
+    
+#----------------------------------------------
 #Inserir dados na tabela Funcao
+#----------------------------------------------
 INSERT INTO Funcao (Codfuncionario, Descricao)
 VALUES
     (1, 'Funcao 1'),
