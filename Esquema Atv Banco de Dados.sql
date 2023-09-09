@@ -144,6 +144,7 @@ VALUES
 #\! echo 'Ficha de atendimentos'; #Faz o print no terminal
 
 #-----------------------Retorno da View-----------------------
+USE Atividade02;
 SELECT *
 FROM ViewConsulta;
 
@@ -371,7 +372,6 @@ FROM ViewTurma;
 #-----------------------FIM ATIVIDADE 03-----------------------
 
 
-
 #-----------------------INICIO ATIVIDADE 04-----------------------
 DROP DATABASE Atividade04; #REALIZAR TESTE DO SCRIP NO TERMINAL
 #----------------------------------------------
@@ -379,48 +379,20 @@ DROP DATABASE Atividade04; #REALIZAR TESTE DO SCRIP NO TERMINAL
 #----------------------------------------------
 CREATE DATABASE Atividade04;
 USE Atividade04;
+#----------------------------------------------
 
-
- /*
- CINEMA
- SALA
- FILME
- HORARIOS
-
- FILMES>SALAS>HORARIOS
-
-sala=
-ID > NOME
-capacidade
-
-filme=
-
-nome lingua original
-nome liguagem estrangeira
-diretor
-ano de laçamento
-tipo
-sinopse
-
-Não existem dois filmes com nome em portugues e ano
-
-premiação=
-
-entidade
-ano
-tipo
-
-
-
-Horários
- */
-
+#----------------------------------------------
+#Tabela Diretor
+#----------------------------------------------
 CREATE TABLE IF NOT EXISTS Diretor(
     CodDiretor INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     Nome VARCHAR(300) NOT NULL,
     AnoNascimento DATE NOT NULL
 );
 
+#----------------------------------------------
+#Tabela Fimes
+#----------------------------------------------
 CREATE TABLE IF NOT EXISTS Filme(
     CodFilme INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     NomeOriginal VARCHAR(200) NOT NULL,
@@ -431,16 +403,24 @@ CREATE TABLE IF NOT EXISTS Filme(
     Tipo INT NOT NULL,
     Sinopse VARCHAR(400)
 );
-
+#----------------------------------------------
+# Adiconando resitrição de chave estrangeira ao CodDiretor
+#----------------------------------------------
 ALTER TABLE FILME ADD CONSTRAINT FOREIGN KEY FK_Diretor_CodDiretor (CodDiretor) REFERENCES Diretor (CodDiretor);
 
 
+#----------------------------------------------
+#Tabela Premiacao
+#----------------------------------------------
 CREATE TABLE IF NOT EXISTS Premiacao(
     CodPremiacao int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     Nome VARCHAR(200) NOT NULL,
     AnoPremiacao DATE NOT NULL
 );
 
+#----------------------------------------------
+#Tabela Fimes Premiacao
+#----------------------------------------------
 CREATE TABLE IF NOT EXISTS FilmePremiacao(
     CodFilme INT NOT NULL,
     CodPremiacao INT NOT NULL,
@@ -448,47 +428,158 @@ CREATE TABLE IF NOT EXISTS FilmePremiacao(
     Indicado VARCHAR(200)
 );
 
+#----------------------------------------------
+#Adiocionando restrição de chave estrangeira a Tabela FilmesPremiacao (CodFilme,CodPremiacao)
+#----------------------------------------------
 ALTER TABLE FilmePremiacao ADD CONSTRAINT FOREIGN KEY FK_Filme_CodFilme (CodFilme) REFERENCES FILME (CodFilme);
 ALTER TABLE FilmePremiacao ADD CONSTRAINT FOREIGN KEY FK_Premiacao_CodPremiacao (CodPremiacao) REFERENCES Premiacao (CodPremiacao);
 
+#----------------------------------------------
+#Tabela Horarios 
+#----------------------------------------------
 CREATE TABLE IF NOT EXISTS Horario(
 	CodHorario INT PRIMARY KEY NOT NULL,
     Horario TIME NOT NULL,
     Descricao VARCHAR(100) NOT NULL
 );
 
+#----------------------------------------------
+#Tabela Salas
+#----------------------------------------------
 CREATE TABLE IF NOT EXISTS Sala(
-    CodSala INT PRIMARY KEY NOT NULL,
+    CodSala INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     NomeSala VARCHAR(200) NOT NULL,
     Capacidade INT NOT NULL
 );
 
+#----------------------------------------------
+#Tabela FilmesExebicao
+#----------------------------------------------
 CREATE TABLE IF NOT EXISTS FilmeExibicao(
     CodSala INT NOT NULL,
     CodFilme INT NULL NULL,
     CodHorario INT NOT NULL
 );
 
+#----------------------------------------------
+#Adicionando restrição de chave estrairas a Tabela FilmeExibicao
+#----------------------------------------------
 ALTER TABLE FilmeExibicao ADD CONSTRAINT FOREIGN KEY FK_Sala_CodSala (CodSala) REFERENCES Sala (CodSala);
 ALTER TABLE FilmeExibicao ADD CONSTRAINT FOREIGN KEY FK_Filme_CodFilme (CodSala) REFERENCES Filme (CodFilme);
 ALTER TABLE FilmeExibicao ADD CONSTRAINT FOREIGN KEY FK_horario_CodHorario (CodHorario) REFERENCES Horario (CodHorario);
 
 
+#----------------------------------------------
+#Tabela Funcionario
+#----------------------------------------------
 CREATE TABLE IF NOT EXISTS Funcionario(
-    Codfuncionario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    CodFuncionario INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     Nome VARCHAR(200) NOT NULL,
+    CPF INT NOT NULL UNIQUE,
+    NomeSocial VARCHAR(200),
     DataAdimissao DATE NOT NULL,
     NumeroCarteiraTabalho INT NOT NULL UNIQUE,
     SalarioInicial FLOAT NOT NULL,
     Salario FLOAT NOT NULL
 );
 
+#----------------------------------------------
+#Tabela Escala 
+#Verifica Como pode ser definido de melhor forma a escala e horarios posteriormente
+#----------------------------------------------
 CREATE TABLE IF NOT EXISTS Escala(
     CodFuncionario INT NOT NULL,
     CodHorario INT NOT NULL,
-    CodSala INT NOT NULL
+    CodSala INT NOT NULL,
+    CodFuncao INT
 );
 
+#----------------------------------------------
+#Adicionando resitrição de chave estrageiras a tabela Escala
+#----------------------------------------------
 ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_Funcionario_CodFuncionario (Codfuncionario) REFERENCES Funcionario (Codfuncionario);
-ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_Sala_CodSala (CodSala) REFERENCES Sala (CodSala);
-ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_FilmeExebicao_CodHorario (CodHorario) REFERENCES FilmeExibicao (CodHorario);
+ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_Sala_CodSala (CodSala) REFERENCES FilmeExibicao (CodSala);
+ALTER TABLE Escala ADD CONSTRAINT FOREIGN KEY FK_Horario_CodHorario (CodHorario) REFERENCES Horario (CodHorario);
+
+CREATE TABLE IF NOT EXISTS Funcao(
+	Codfuncionario INT NOT NULL,
+    Descricao VARCHAR(200)
+);
+
+ALTER TABLE FUNCAO ADD CONSTRAINT FOREIGN KEY FK_Escala_CodFuncionario (CodFuncionario) REFERENCES Escala (CodFuncionario);
+
+#-----------------------GERANDO INSERT NO BANCO 'Atividade0'-----------------------
+
+
+#Inserir dados na tabela Diretor
+INSERT INTO Diretor (Nome, AnoNascimento)
+VALUES
+    ('Diretor 1', '1990-01-01'),
+    ('Diretor 2', '1985-02-15'),
+    ('Diretor 3', '1978-08-20');
+
+#Inserir dados na tabela Filme
+INSERT INTO Filme (NomeOriginal, NomeExibicao, DataEtreia, AnoLancamento, CodDiretor, Tipo, Sinopse)
+VALUES
+    ('Filme 1', 'Filme Exibição 1', '2023-03-10', '2023-03-05', 1, 1, 'Sinopse do Filme 1'),
+    ('Filme 2', 'Filme Exibição 2', '2023-04-15', '2023-04-10', 2, 2, 'Sinopse do Filme 2'),
+    ('Filme 3', 'Filme Exibição 3', '2023-05-20', '2023-05-15', 3, 1, 'Sinopse do Filme 3');
+
+#Inserir dados na tabela Premiacao
+INSERT INTO Premiacao (Nome, AnoPremiacao)
+VALUES
+    ('Oscar', '2023-02-28'),
+    ('Globo de Ouro', '2023-01-15'),
+    ('Festival de Cannes', '2023-05-25');
+
+#Inserir dados na tabela FilmePremiacao
+INSERT INTO FilmePremiacao (CodFilme, CodPremiacao, Classe, Indicado)
+VALUES
+    (1, 1, 1, 'Sim'),
+    (2, 1, 2, 'Não'),
+    (3, 3, 1, 'Sim');
+
+#Inserir dados na tabela Horario
+INSERT INTO Horario (CodHorario, Horario, Descricao)
+VALUES
+    (1, '14:00:00', 'Matinê'),
+    (2, '19:30:00', 'Noite'),
+    (3, '22:00:00', 'Madrugada');
+
+#Inserir dados na tabela Sala
+INSERT INTO Sala (NomeSala, Capacidade)
+VALUES
+    ('Sala 1', 100),
+    ('Sala 2', 80),
+    ('Sala 3', 120);
+
+#Inserir dados na tabela FilmeExibicao
+INSERT INTO FilmeExibicao (CodSala, CodFilme, CodHorario)
+VALUES
+    (1, 1, 1),
+    (2, 2, 2),
+    (3, 3, 3);
+
+#Inserir dados na tabela Funcionario
+INSERT INTO Funcionario (Nome, CPF, NomeSocial, DataAdimissao, NumeroCarteiraTabalho, SalarioInicial, Salario)
+VALUES
+    ('Funcionario 1', 123456789, 'Nome Social 1', '2023-01-10', 101, 2500.00, 2800.00),
+    ('Funcionario 2', 234567890, 'Nome Social 2', '2023-02-15', 102, 2600.00, 2900.00),
+    ('Funcionario 3', 345678901, 'Nome Social 3', '2023-03-20', 103, 2700.00, 3000.00);
+
+#Inserir dados na tabela Escala
+INSERT INTO Escala (CodFuncionario, CodHorario, CodSala, CodFuncao)
+VALUES
+    (1, 1, 1, NULL),
+    (2, 2, 2, NULL),
+    (3, 3, 3, NULL);
+
+#Inserir dados na tabela Funcao
+INSERT INTO Funcao (Codfuncionario, Descricao)
+VALUES
+    (1, 'Funcao 1'),
+    (2, 'Funcao 2'),
+    (3, 'Funcao 3');
+
+
+#-----------------------FIM INSERT NO BANCO 'Atividade04'-----------------------
