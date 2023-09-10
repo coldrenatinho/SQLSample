@@ -759,3 +759,109 @@ ALTER TABLE Customer_Package ADD CONSTRAINT FOREIGN KEY FK_Delivery_Boy_Delivere
 ALTER TABLE Employee ADD CONSTRAINT FOREIGN KEY FK_Branch_ID (Branch_ID) REFERENCES Branch (ID);
 ALTER TABLE Employee ADD CONSTRAINT FOREIGN KEY FK_Designation_Desing_ID (Desing_ID) REFERENCES Designation (Desing_ID);
 ALTER TABLE Delivery_Packger ADD CONSTRAINT FOREIGN KEY FK_Employee_Employee_ID (Employee_ID) REFERENCES Employee (Employee_ID);
+#-----------------------FIM ATIVIDADE 04 (Part 3)-----------------------
+
+
+
+
+
+
+#-----------------------INICIO ATIVIDADE 05-----------------------
+DROP DATABASE Atividade05; #REALIZAR TESTE DO SCRIP NO TERMINAL
+#----------------------------------------------
+#Novo Banco Atividade05
+#----------------------------------------------
+CREATE DATABASE IF NOT EXISTS Atividade05;
+
+USE Atividade05;
+
+CREATE TABLE IF NOT EXISTS Usuario(
+    CodMatricula INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    NomeUsuario VARCHAR(200) NOT NULL,
+    LogradouroUsuario VARCHAR(200) NOT NULL,
+    EmailUsuario VARCHAR(100) NOT NULL,
+    LivroEmAtraso CHAR(1) #Sim='S',Não='N'
+);
+
+CREATE TABLE IF NOT EXISTS Autor(
+    CodAutor INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    NomeAuotr VARCHAR(200) NOT NULL,
+    NacionalidadeReduzido CHAR(3) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Editora(
+    CodEditora INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    NomeEditora VARCHAR (100)
+);
+
+CREATE TABLE IF NOT EXISTS Livro(
+    CodLivro INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    Titulo VARCHAR(100) NOT NULL,
+    Edicao VARCHAR(100) NOT NULL,
+    CodAutor INT NOT NULL,
+    CodEditora INT NOT NULL
+);
+
+    ALTER TABLE Livro ADD CONSTRAINT FOREIGN KEY FK_Editora_CodEditora (CodEditora) REFERENCES Editora (CodEditora);
+    ALTER TABLE Livro ADD CONSTRAINT FOREIGN KEY FK_Autor_CodAutor (CodAutor) REFERENCES Autor (CodAutor);
+
+
+CREATE TABLE IF NOT EXISTS Assunto(
+    CodAssunto VARCHAR(3) PRIMARY KEY NOT NULL, # Exemplo '001' = Magia, '300' - Idade Média, '080' = Roma, '090' = Romance
+    Descricao VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS LivroClassificacao(
+    CodLivro INT NOT NULL,
+    AssuntoPrincipal VARCHAR(3) NOT NULL,
+    EsturaClassifica VARCHAR(400) #Vai ser Utilziado uma estrutura de Classificacao de 3 digitos sendo relarionado da esqueda para a direita e sepadara por ponto '.' e sua sub classificacao separada por virgurla por vigura ','
+                                  #Exemplo '001.300,080,090' (Livro de Mágia na idade Média) sub (Roma, romances)
+);
+
+    ALTER TABLE LivroClassificacao ADD CONSTRAINT FOREIGN KEY FK_Livro_CodLivro (CodLivro) REFERENCES Livro (CodLivro);
+    ALTER TABLE LivroClassificacao ADD CONSTRAINT FOREIGN KEY FK_Assunto_CodAssunto (AssuntoPrincipal) REFERENCES Assunto (CodAssunto);
+
+
+CREATE TABLE IF NOT EXISTS LivroReserva(
+    LivroReserva_ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    CodLivro INT NOT NULL,
+    CodMatricula INT NOT NULL,
+    DataReserva DATE NOT NULL,
+    DataEmprestimo DATE NOT NULL, #PREVISTA COM 3 DIAS DE TOLERANCIA,
+    Status VARCHAR(20) #Ativo, Cancelada, Desistencia 
+);
+
+    ALTER TABLE LivroReserva ADD CONSTRAINT FOREIGN KEY FK_Livro_CodLivro (CodLivro) REFERENCES Livro (CodLivro);
+    ALTER TABLE LivroReserva ADD CONSTRAINT FOREIGN KEY  FK_Usuario_CodMatricula (CodMatricula) REFERENCES Usuario (CodMatricula);
+
+
+
+CREATE TABLE IF NOT EXISTS LivroEmprestimo(
+    LivroEmprestimo_ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    LivroReserva_ID INT,
+    CodLivro INT NOT NULL,
+    CodMatricula INT NOT NULL
+);
+
+    ALTER TABLE LivroEmprestimo ADD CONSTRAINT FOREIGN KEY FK_Livro_CodLivro (CodLivro) REFERENCES Livro (CodLivro);
+    ALTER TABLE LivroEmprestimo ADD CONSTRAINT FOREIGN KEY FK_LivroReserva_LivroReserva_ID (LivroReserva_ID) REFERENCES LivroReserva (LivroReserva_ID);
+
+
+CREATE TABLE IF NOT EXISTS LivroDevolucao(
+    LivroDevolucao_ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    LivroEmprestimo_ID INT NOT NULL,
+    DataPrevista DATE NOT NULL,
+    DataDevolucao DATE
+);
+
+    ALTER TABLE LivroDevolucao ADD CONSTRAINT FOREIGN KEY FK_LivroEmprestimo_LivroEmprestimo_ID (LivroEmprestimo_ID) REFERENCES LivroEmprestimo (LivroEmprestimo_ID);
+
+
+
+
+
+
+
+
+
+
