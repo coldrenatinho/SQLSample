@@ -856,12 +856,18 @@ CREATE TABLE IF NOT EXISTS LivroDevolucao(
 
     ALTER TABLE LivroDevolucao ADD CONSTRAINT FOREIGN KEY FK_LivroEmprestimo_LivroEmprestimo_ID (LivroEmprestimo_ID) REFERENCES LivroEmprestimo (LivroEmprestimo_ID);
 
+#----------------------_FIM ATIVIDADE 05-----------------------
 
 
 
+#-----------------------INICIO ATIVIDADE 05 PART 2-----------------------
+DROP DATABASE Atividade05Part2; #REALIZAR TESTE DO SCRIP NO TERMINAL
+#----------------------------------------------
+#Novo Banco Atividade06Part2
+#----------------------------------------------
+CREATE DATABASE IF NOT EXISTS Atividade05Part2;
+
+USE Atividade05;
 
 
-
-
-
-
+#-----------------------FIM ATIVIDADE 05 PART 2-----------------------
