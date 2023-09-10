@@ -727,7 +727,8 @@ CREATE TABLE IF NOT EXISTS Employee(
     Contact INT(11) NOT NULL,
     CNIC VARCHAR(20) NOT NULL,
     Branch_ID VARCHAR(50) NOT NULL,
-    Desing_ID INT(11) NOT NULL
+    Desing_ID INT(11) NOT NULL,
+	Shift VARCHAR(10)
 );
 
 CREATE TABLE IF NOT EXISTS Designation(
@@ -736,12 +737,8 @@ CREATE TABLE IF NOT EXISTS Designation(
     Desing_Desc VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Delivery_Boy(
-    Name VARCHAR(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS Delivery_Packger(
     ID VARCHAR(50) PRIMARY KEY NOT NULL,
-    Contact VARCHAR(50) NOT NULL,
-    Salary VARCHAR(50) NOT NULL,
-    Shift VARCHAR(10) NOT NULL,
     Employee_ID INT(11) NOT NULL
 );
 
@@ -758,7 +755,7 @@ ALTER TABLE Address ADD CONSTRAINT FOREIGN KEY FK_Branch_ID (ID) REFERENCES Bran
 ALTER TABLE Customer_Package ADD CONSTRAINT FOREIGN KEY FK_Customer_ID (Customer_ID) REFERENCES Customer (Customer_ID);
 ALTER TABLE Customer_Package ADD CONSTRAINT FOREIGN KEY FK_Receiver_Receiever_ID (Receiver_ID) REFERENCES Receiver (Receiver_ID);
 ALTER TABLE Customer_Package ADD CONSTRAINT FOREIGN KEY FK_Rate_City_Rate (City_Rate) REFERENCES Rate (City_Rate);
-ALTER TABLE Customer_Package ADD CONSTRAINT FOREIGN KEY FK_Delivery_Boy_Delivered_ID (Delivered_ID) REFERENCES Delivery_Boy (ID);
+ALTER TABLE Customer_Package ADD CONSTRAINT FOREIGN KEY FK_Delivery_Boy_Delivered_ID (Delivered_ID) REFERENCES Delivery_Packger (ID);
 ALTER TABLE Employee ADD CONSTRAINT FOREIGN KEY FK_Branch_ID (Branch_ID) REFERENCES Branch (ID);
 ALTER TABLE Employee ADD CONSTRAINT FOREIGN KEY FK_Designation_Desing_ID (Desing_ID) REFERENCES Designation (Desing_ID);
-ALTER TABLE Delivery_Boy ADD CONSTRAINT FOREIGN KEY FK_Employee_Employee_ID (Employee_ID) REFERENCES Employee (Employee_ID);
+ALTER TABLE Delivery_Packger ADD CONSTRAINT FOREIGN KEY FK_Employee_Employee_ID (Employee_ID) REFERENCES Employee (Employee_ID);
