@@ -670,3 +670,95 @@ ALTER TABLE Dependentes ADD CONSTRAINT FOREIGN KEY FK_Empregado_CodMatricula (Co
 
 
 
+#-----------------------FIM TIVIDADE 04 (Part 2)-----------------------
+
+
+
+
+#-----------------------INICIO ATIVIDADE 04 (Part 3)-----------------------
+DROP DATABASE Atividade04Part3; #REALIZAR TESTE DO SCRIP NO TERMINAL
+#----------------------------------------------
+#Novo Banco Atividade04Part3
+#----------------------------------------------
+CREATE DATABASE IF NOT EXISTS Atividade04Part3;
+
+USE Atividade04Part3;
+
+CREATE TABLE IF NOT EXISTS Customer(
+    Name VARCHAR(50) NOT NULL,
+    Email VARCHAR(50) NOT NULL,
+    Contact INT(11) NOT NULL,
+    Customer_ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT
+);
+
+CREATE TABLE IF NOT EXISTS Customer_Package(
+    ID VARCHAR(50) PRIMARY KEY NOT NULL,
+    Type VARCHAR(50) NOT NULL,
+    Delivery_Date DATE NOT NULL,
+    City_Rate FLOAT NOT NULL,
+    Customer_ID INT NOT NULL,
+    Receiver_ID VARCHAR(50) NOT NULL,
+    Delivered_ID VARCHAR(50) NOT NULL,
+    Weight FLOAT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Rate(
+    City_Rate FLOAT PRIMARY KEY NOT NULL,
+    Weight FLOAT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Receiver(
+    Receiver_ID VARCHAR(50) PRIMARY KEY NOT NULL,
+    Name VARCHAR(50) NOT NULL,
+    Contact VARCHAR(50) NOT NULL,
+    Customer_ID INT(11) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Address(
+    Address VARCHAR(50) PRIMARY KEY NOT NULL,
+    ID VARCHAR(50) NOT NULL,
+    Receiver_ID VARCHAR(50) NOT NULL,
+    Customer_ID INT(11) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Employee(
+    Name VARCHAR(50) NOT NULL,
+    Employee_ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    Contact INT(11) NOT NULL,
+    CNIC VARCHAR(20) NOT NULL,
+    Branch_ID VARCHAR(50) NOT NULL,
+    Desing_ID INT(11) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Designation(
+    Desing_ID INT(50) PRIMARY KEY NOT NULL,
+    Salary INT NOT NULL,
+    Desing_Desc VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Delivery_Boy(
+    Name VARCHAR(50) NOT NULL,
+    ID VARCHAR(50) PRIMARY KEY NOT NULL,
+    Contact VARCHAR(50) NOT NULL,
+    Salary VARCHAR(50) NOT NULL,
+    Shift VARCHAR(10) NOT NULL,
+    Employee_ID INT(11) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Branch(
+    ID VARCHAR(50) PRIMARY KEY NOT NULL,
+    Coty VARCHAR(50)
+);
+
+
+ALTER TABLE Receiver ADD CONSTRAINT FOREIGN KEY FK_Customer_Customer_ID (Customer_ID) REFERENCES Customer (Customer_ID);
+ALTER TABLE Address ADD CONSTRAINT FOREIGN KEY FK_Receiver_Receiever_ID (Receiver_ID) REFERENCES Receiver (Receiver_ID);
+ALTER TABLE Address ADD CONSTRAINT FOREIGN KEY FK_Customer_Customer_ID (Customer_ID) REFERENCES Customer (Customer_ID);
+ALTER TABLE Address ADD CONSTRAINT FOREIGN KEY FK_Branch_ID (ID) REFERENCES Branch (ID);
+ALTER TABLE Customer_Package ADD CONSTRAINT FOREIGN KEY FK_Customer_ID (Customer_ID) REFERENCES Customer (Customer_ID);
+ALTER TABLE Customer_Package ADD CONSTRAINT FOREIGN KEY FK_Receiver_Receiever_ID (Receiver_ID) REFERENCES Receiver (Receiver_ID);
+ALTER TABLE Customer_Package ADD CONSTRAINT FOREIGN KEY FK_Rate_City_Rate (City_Rate) REFERENCES Rate (City_Rate);
+ALTER TABLE Customer_Package ADD CONSTRAINT FOREIGN KEY FK_Delivery_Boy_Delivered_ID (Delivered_ID) REFERENCES Delivery_Boy (ID);
+ALTER TABLE Employee ADD CONSTRAINT FOREIGN KEY FK_Branch_ID (Branch_ID) REFERENCES Branch (ID);
+ALTER TABLE Employee ADD CONSTRAINT FOREIGN KEY FK_Designation_Desing_ID (Desing_ID) REFERENCES Designation (Desing_ID);
+ALTER TABLE Delivery_Boy ADD CONSTRAINT FOREIGN KEY FK_Employee_Employee_ID (Employee_ID) REFERENCES Employee (Employee_ID);
