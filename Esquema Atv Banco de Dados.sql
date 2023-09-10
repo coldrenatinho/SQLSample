@@ -424,7 +424,7 @@ CREATE TABLE IF NOT EXISTS Premiacao(
 CREATE TABLE IF NOT EXISTS FilmePremiacao(
     CodFilme INT NOT NULL,
     CodPremiacao INT NOT NULL,
-    Classe INT NOT NULL,
+    Classe Varchar(200) NOT NULL,
     Indicado VARCHAR(200)
 );
 
@@ -491,7 +491,7 @@ CREATE TABLE IF NOT EXISTS Escala(
     CodFuncionario INT NOT NULL,
     CodHorario INT NOT NULL,
     CodSala INT NOT NULL,
-    CodFuncao INT
+    CodFuncao INT NOT NULL
 );
 
 #----------------------------------------------
@@ -542,9 +542,9 @@ VALUES
 #----------------------------------------------
 INSERT INTO FilmePremiacao (CodFilme, CodPremiacao, Classe, Indicado)
 VALUES
-    (1, 1, 1, 'Sim'),
-    (2, 1, 2, 'Não'),
-    (3, 3, 1, 'Sim');
+    (1, 1, 'Melhor Atriz', 'Julia Pé de Pato'),
+    (2, 1, 'Fotografia', 'Pablo 4K'),
+    (3, 3, 'Melhor Diretor', 'Katsoriro Otomo');
 
 #----------------------------------------------
 #Inserir dados na tabela Horario
@@ -560,9 +560,9 @@ VALUES
 #----------------------------------------------
 INSERT INTO Sala (NomeSala, Capacidade)
 VALUES
-    ('Sala 1', 100),
-    ('Sala 2', 80),
-    ('Sala 3', 120);
+    ('Prime', 100),
+    ('Estrangeiro', 80),
+    ('Estréia', 120);
 
 #----------------------------------------------
 #Inserir dados na tabela FilmeExibicao
@@ -578,9 +578,9 @@ VALUES
 #----------------------------------------------
 INSERT INTO Funcionario (Nome, CPF, NomeSocial, DataAdimissao, NumeroCarteiraTabalho, SalarioInicial, Salario)
 VALUES
-    ('Funcionario 1', 123456789, 'Nome Social 1', '2023-01-10', 101, 2500.00, 2800.00),
-    ('Funcionario 2', 234567890, 'Nome Social 2', '2023-02-15', 102, 2600.00, 2900.00),
-    ('Funcionario 3', 345678901, 'Nome Social 3', '2023-03-20', 103, 2700.00, 3000.00);
+    ('José', 123456789, '', '2023-01-10', 101, 2500.00, 2800.00),
+    ('Maria', 234567890, '', '2023-02-15', 102, 2600.00, 2900.00),
+    ('Abel', 345678901, '', '2023-03-20', 103, 2700.00, 3000.00);
 
 
 #----------------------------------------------
@@ -588,19 +588,85 @@ VALUES
 #----------------------------------------------
 INSERT INTO Escala (CodFuncionario, CodHorario, CodSala, CodFuncao)
 VALUES
-    (1, 1, 1, NULL),
-    (2, 2, 2, NULL),
-    (3, 3, 3, NULL);
+    (1, 1, 1, 1),
+    (2, 2, 2, 2),
+    (3, 3, 3, 3);
 
-    
+
 #----------------------------------------------
 #Inserir dados na tabela Funcao
 #----------------------------------------------
 INSERT INTO Funcao (Codfuncionario, Descricao)
 VALUES
-    (1, 'Funcao 1'),
-    (2, 'Funcao 2'),
-    (3, 'Funcao 3');
+    (1, 'Operador de Caixa '),
+    (2, 'Recepcionista'),
+    (3, 'Pipoqueiro');
 
 
 #-----------------------FIM INSERT NO BANCO 'Atividade04'-----------------------
+#-----------------------FIM TIVIDADE 'Atividade04'-----------------------
+
+
+#-----------------------INICIO ATIVIDADE 04 (part2)-----------------------
+DROP DATABASE Atividade04Part2;
+CREATE DATABASE IF NOT EXISTS Atividade04Part2;
+
+USE Atividade04Part2;
+
+
+CREATE TABLE IF NOT EXISTS Departamento(
+    CodDepartamento INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    Nome VARCHAR(45) NOT NULL,
+    Telefone VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Empregado(
+    Nome VARCHAR(200) NOT NULL,
+    Sexo CHAR(1) NOT NULL,
+    Salario DECIMAL(2) NOT NULL,
+    Logradouro VARCHAR(100) NOT NULL,
+    Bairro VARCHAR(100) NOT NULL,
+    CEP VARCHAR(9) NOT NULL,
+    NumeroLogradouro VARCHAR(9) NOT NULL,
+    CodMatricula VARCHAR(10) PRIMARY KEY NOT NULL,
+    CodDepartamento INT NOT NULL
+);
+
+ALTER TABLE Empregado ADD CONSTRAINT FOREIGN KEY FK_Departamento_CodDepartamento (CodDepartamento) REFERENCES Departamento (CodDepartamento);
+
+
+CREATE TABLE IF NOT EXISTS Projeto(
+    CodProjeto INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    Nome VARCHAR(100) NOT NULL,
+    Localizacao VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS EmpregadoProjeto(
+    CodMatricula VARCHAR(10),
+    CodProjeto INT
+);
+
+ALTER TABLE EmpregadoProjeto ADD CONSTRAINT FOREIGN KEY FK_Empregado_CodMatricula (CodMatricula) REFERENCES Empregado (CodMatricula);
+ALTER TABLE EmpregadoProjeto ADD CONSTRAINT FOREIGN KEY FK_Projeto_CodProjeto (CodProjeto) REFERENCES Projeto (CodProjeto);
+
+
+CREATE TABLE IF NOT EXISTS EmpregadoTelefone(
+    CodMatricula VARCHAR(10) NOT NULL,
+    Telefone VARCHAR(10) PRIMARY KEY NOT NULL
+);
+
+ALTER TABLE EmpregadoTelefone ADD CONSTRAINT FOREIGN KEY FK_Empregado_CodMatricula (CodMatricula) REFERENCES Empregado(CodMatricula);
+
+
+CREATE TABLE IF NOT EXISTS Dependentes(
+    CodDependete VARCHAR(10) PRIMARY KEY NOT NULL,
+    Nome VARCHAR(45) NOT NULL,
+    Sexo CHAR(1) NOT NULL,
+    Parentesco VARCHAR(45) NOT NULL,
+    CodMatricula VARCHAR(10) NOT NULL
+);
+
+ALTER TABLE Dependentes ADD CONSTRAINT FOREIGN KEY FK_Empregado_CodMatricula (CodMatricula) REFERENCES Empregado (CodMatricula);
+
+
+
