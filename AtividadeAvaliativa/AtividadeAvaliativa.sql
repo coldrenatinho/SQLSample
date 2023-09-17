@@ -3,13 +3,16 @@
 #UNEMAT - UNIVERSIDADE DO ESTADO DO MATO GROSSO
 #https://github.com/coldrenatinho/
 #@coldrenatinho
-
+--------------------------------------------------------------
+#https://skyvector.com/
+#Metadados dataset dos voos: https://www.anac.gov.br/acesso-a-informacao/dados-abertos/areas-de-atuacao/voos-e-operacoes-aereas/tarifas-aereas-domesticas/46-tarifas-aereas-domesticas
+#https://www.gov.br/anac/pt-br/assuntos/regulados/aerodromos/lista-de-aerodromos-civis-cadastrados
 #-----------------------------AERÓDROMO---------------------------------
-DROP DATABASE VOO;
+#DROP DATABASE VooOperado;
 
-CREATE DATABASE IF NOT EXISTS VOO;
+CREATE DATABASE IF NOT EXISTS VooOperado;
 
-USE VOO;
+USE VooOperado;
 
 CREATE TABLE IF NOT EXISTS Perido(
 	CodPeriodo INT PRIMARY KEY NOT NULL auto_increment,
@@ -47,11 +50,38 @@ CREATE TABLE IF NOT EXISTS VooOperado(
 ALTER TABLE VooOperado ADD CONSTRAINT foreign key FK_Aeroporto_CodOrigem (CodOrigem) REFERENCES Aeroporto (CodAeroporto);
 ALTER TABLE VooOperado ADD CONSTRAINT foreign key FK_Aeroporto_CodDestino (CodDestino) REFERENCES Aeroporto (CodAeroporto);
 ALTER TABLE VooOperado ADD constraint foreign key FK_Empres_CodEmpresa (CodEmpresa) REFERENCES Empresa (CodEmpresa);
+#-----------------------------FIM AERÓDROMO---------------------------------
 
 
 
-    
+#-----------------------------Import_Sheets---------------------------------
+DROP DATABASE Import_Sheets;
+CREATE DATABASE IF NOT EXISTS Import_Sheets;
 
+USE Import_Sheets;
+
+CREATE TABLE IF NOT EXISTS Import_Aerodromo(
+    ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    OACI VARCHAR(10),
+    CIAD VARCHAR(10),
+    NomeAerodromo VARCHAR(200),
+    MunicipioAtendido VARCHAR(100),
+    UF CHAR(2),
+    Latitude VARCHAR(100),
+    Longitude VARCHAR(100)
+);
+
+LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.1\\Uploads\\ICAOcadastro-de-aerodromos.UTF-8.csv'
+INTO TABLE Import_Aerodromo
+FIELDS TERMINATED BY ';'
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(OACI,CIAD,NomeAerodromo,MunicipioAtendido,UF,Latitude,Longitude);
+
+
+SELECT *
+FROM Import_Aerodromo
     
                               
 
