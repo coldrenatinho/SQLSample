@@ -71,6 +71,18 @@ CREATE TABLE IF NOT EXISTS Import_Aerodromo(
     Longitude VARCHAR(100)
 );
 
+
+CREATE TABLE IF NOT EXISTS Import_VooOperado(
+    ID_VooOperado INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    AnoReferencia INT,
+    MesReferencia INT,
+    ICAOEmpresaAerea VARCHAR(10),
+    ICAOAerodromoOrigem VARCHAR(10),
+    ICAOAerodromoDestino VARCHAR(10),
+    Tarifa INT,
+    AssentosComercializados int
+);
+
 LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.1\\Uploads\\ICAOcadastro-de-aerodromos.UTF-8.csv'
 INTO TABLE Import_Aerodromo
 FIELDS TERMINATED BY ';'
@@ -80,9 +92,15 @@ IGNORE 1 ROWS
 (OACI,CIAD,NomeAerodromo,MunicipioAtendido,UF,Latitude,Longitude);
 
 
-SELECT *
-FROM Import_Aerodromo
-    
-                              
+LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.1\\Uploads\\Voos_Operados_em_Maio_de_2020.csv'
+INTO TABLE Import_VooOperado
+FIELDS TERMINATED BY ';'
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(AnoReferencia, MesReferencia, ICAOEmpresaAerea, ICAOAerodromoOrigem, ICAOAerodromoDestino, Tarifa, AssentosComercializados);
+
+                                 
+
 
 
