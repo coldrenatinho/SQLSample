@@ -123,10 +123,11 @@ group by ICAOEmpresaAerea;
 insert into Anac.Municipio(UF, NomeMunicipio)
 SELECT distinct UF, MunicipioAtendido
 FROM Import_Aerodromo
+GROUP BY UF, MunicipioAtendido
 ORDER BY UF, MunicipioAtendido;
 
-insert into Anac.Aerodromo(AOCI, CIAD, Nome,MunicipioAtendido, UF, Latitude, Longitude)
-SELECT OACI, CIAD ,NomeAerodromo ,MunicipioAtendido ,UF ,Latitude ,Longitude
+insert into Anac.Aerodromo(AOCI, CIAD, Nome,CodMunicipio, MunicipioAtendido, UF, Latitude, Longitude)
+SELECT OACI, CIAD ,NomeAerodromo ,(select CodMunicipio from Anac.Municipio WHERE ANAC.Municipio.NomeMunicipio = Import_Aerodromo.MunicipioAtendido LIMIT 1) as CodMunicipio,MunicipioAtendido ,UF ,Latitude ,Longitude
 FROM Import_Aerodromo;
 
 insert into Anac.VooOperado(CodEmpresa, CodPerido, CodOrigem, CodDestino, Tarifa, AssentosComercializados)
