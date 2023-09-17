@@ -1,4 +1,4 @@
-#Esquema de banco a ser utilzado na aulas do Laboratório de Banco de Dados
+#Atividade Avaliativa Laboratório de Banco de Dados
 #RENATO ARAUJO DA SILVA
 #UNEMAT - UNIVERSIDADE DO ESTADO DO MATO GROSSO
 #https://github.com/coldrenatinho/
@@ -8,47 +8,56 @@
 #Metadados dataset dos voos: https://www.anac.gov.br/acesso-a-informacao/dados-abertos/areas-de-atuacao/voos-e-operacoes-aereas/tarifas-aereas-domesticas/46-tarifas-aereas-domesticas
 #https://www.gov.br/anac/pt-br/assuntos/regulados/aerodromos/lista-de-aerodromos-civis-cadastrados
 #-----------------------------AERÓDROMO---------------------------------
-#DROP DATABASE VooOperado;
+DROP DATABASE Anac;
 
-CREATE DATABASE IF NOT EXISTS VooOperado;
+CREATE DATABASE IF NOT EXISTS Anac;
 
-USE VooOperado;
+USE Anac;
 
 CREATE TABLE IF NOT EXISTS Perido(
 	CodPeriodo INT PRIMARY KEY NOT NULL auto_increment,
-    Ano INT NOT NULL,
-    Mes INT NOT NULL
+    AnoReferencia INT NOT NULL,
+    MesReferencia INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Municipio(
+	CodMunicipio INT PRIMARY KEY NOT NULL auto_increment,
+    UF CHAR(2) NOT NULL,
+    NomeMunicipio VARCHAR(100) NOT NULL,
+    CodIBGE INT
 );
 
 CREATE TABLE IF NOT EXISTS Empresa(
 	CodEmpresa int PRIMARY KEY NOT NULL auto_increment,
-    SiglaEmpresa VARCHAR(5),
+    ICAOEmpresa VARCHAR(5) NOT NULL UNIQUE,
     NomeEmpresa VARCHAR(100)
 );
 
-CREATE TABLE IF NOT EXISTS Aeroporto(
-	CodAeroporto INT PRIMARY KEY NOT NULL auto_increment NOT NULL,
-    AOCI VARCHAR(5) NOT NULL,
-    CIAD VARCHAR(5) NOT NULL,
+CREATE TABLE IF NOT EXISTS Aerodromo(
+	CodAerodromo INT NOT NULL auto_increment unique,
+    AOCI VARCHAR(10) NOT NULL,
+    CIAD VARCHAR(10) NOT NULL,
     Nome VARCHAR(100) NOT NULL,
+    CodMunicipio INT,
     MunicipioAtendido VARCHAR(100) NOT NULL,
     UF VARCHAR(2) NOT NULL,
     Latitude VARCHAR(200) NOT NULL,
-    Logitude VARCHAR(200) NOT NULL
+    Longitude VARCHAR(200) NOT NULL,
+    PRIMARY KEY (AOCI,CIAD)
 );
 
 CREATE TABLE IF NOT EXISTS VooOperado(
 	ID_VooOperado INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     CodEmpresa INT NOT NULL,
     CodPerido INT NOT NULL,
-    CodOrigem INT NOT NULL,
-    CodDestino INT NOT NULL,
+    CodOrigem INT,
+    CodDestino INT,
     Tarifa INT NOT NULL,
     AssentosComercializados INT NOT NULL
 );
 
-ALTER TABLE VooOperado ADD CONSTRAINT foreign key FK_Aeroporto_CodOrigem (CodOrigem) REFERENCES Aeroporto (CodAeroporto);
-ALTER TABLE VooOperado ADD CONSTRAINT foreign key FK_Aeroporto_CodDestino (CodDestino) REFERENCES Aeroporto (CodAeroporto);
+ALTER TABLE VooOperado ADD CONSTRAINT foreign key FK_Aerodromo_CodOrigem (CodOrigem) REFERENCES Aerodromo (CodAerodromo);
+ALTER TABLE VooOperado ADD CONSTRAINT foreign key FK_Aerodromo_CodDestino (CodDestino) REFERENCES Aerodromo (CodAerodromo);
 ALTER TABLE VooOperado ADD constraint foreign key FK_Empres_CodEmpresa (CodEmpresa) REFERENCES Empresa (CodEmpresa);
 #-----------------------------FIM AERÓDROMO---------------------------------
 
@@ -71,7 +80,6 @@ CREATE TABLE IF NOT EXISTS Import_Aerodromo(
     Longitude VARCHAR(100)
 );
 
-
 CREATE TABLE IF NOT EXISTS Import_VooOperado(
     ID_VooOperado INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     AnoReferencia INT,
@@ -91,7 +99,6 @@ LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
 (OACI,CIAD,NomeAerodromo,MunicipioAtendido,UF,Latitude,Longitude);
 
-
 LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.1\\Uploads\\Voos_Operados_em_Maio_de_2020.csv'
 INTO TABLE Import_VooOperado
 FIELDS TERMINATED BY ';'
@@ -100,7 +107,42 @@ LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
 (AnoReferencia, MesReferencia, ICAOEmpresaAerea, ICAOAerodromoOrigem, ICAOAerodromoDestino, Tarifa, AssentosComercializados);
 
-                                 
+#-----------------------------Import_Sheets---------------------------------
+ 
+insert into Anac.perido (AnoReferencia, MesReferencia)
+SELECT AnoReferencia, MesReferencia
+FROM Import_VooOperado
+GROUP BY AnoReferencia, MesReferencia
+ORDER BY AnoReferencia, MesReferencia;
 
+insert into Anac.Empresa (ICAOEmpresa)
+SELECT ICAOEmpresaAerea
+FROM Import_VooOperado
+group by ICAOEmpresaAerea;
 
+insert into Anac.Municipio(UF, NomeMunicipio)
+SELECT distinct UF, MunicipioAtendido
+FROM Import_Aerodromo
+ORDER BY UF, MunicipioAtendido;
 
+insert into Anac.Aerodromo(AOCI, CIAD, Nome,MunicipioAtendido, UF, Latitude, Longitude)
+SELECT OACI, CIAD ,NomeAerodromo ,MunicipioAtendido ,UF ,Latitude ,Longitude
+FROM Import_Aerodromo;
+
+insert into Anac.VooOperado(CodEmpresa, CodPerido, CodOrigem, CodDestino, Tarifa, AssentosComercializados)
+select (SELECT CodEmpresa 
+		FROM Anac.Empresa 
+        where Anac.Empresa.ICAOEmpresa = Import_VooOperado.ICAOEmpresaAerea) as CodEmpresa,
+       (SELECT CodPeriodo 
+		FROM Anac.perido 
+        where Import_VooOperado.AnoReferencia = Anac.perido.AnoReferencia 
+        and Import_Sheets.Import_VooOperado.MesReferencia = Anac.perido.MesReferencia ) as CodPerido,
+        (SELECT CodAerodromo 
+        FROM Anac.Aerodromo 
+        WHERE Anac.Aerodromo.AOCI = Import_VooOperado.ICAOAerodromoOrigem) as CodOrigem,
+		(SELECT CodAerodromo 
+        FROM Anac.Aerodromo 
+        WHERE Anac.Aerodromo.AOCI = Import_VooOperado.ICAOAerodromoDestino) as CodDestino,
+        Tarifa,
+        AssentosComercializados
+FROM Import_VooOperado;
