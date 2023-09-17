@@ -7,14 +7,13 @@
 #https://skyvector.com/
 #Metadados dataset dos voos: https://www.anac.gov.br/acesso-a-informacao/dados-abertos/areas-de-atuacao/voos-e-operacoes-aereas/tarifas-aereas-domesticas/46-tarifas-aereas-domesticas
 #https://www.gov.br/anac/pt-br/assuntos/regulados/aerodromos/lista-de-aerodromos-civis-cadastrados
-#-----------------------------AERÓDROMO---------------------------------
-DROP DATABASE Anac;
+#DROP DATABASE Anac;
 
 CREATE DATABASE IF NOT EXISTS Anac;
 
 USE Anac;
 
-CREATE TABLE IF NOT EXISTS Perido(
+CREATE TABLE IF NOT EXISTS Periodo(
 	CodPeriodo INT PRIMARY KEY NOT NULL auto_increment,
     AnoReferencia INT NOT NULL,
     MesReferencia INT NOT NULL
@@ -39,8 +38,8 @@ CREATE TABLE IF NOT EXISTS Aerodromo(
     CIAD VARCHAR(10) NOT NULL,
     Nome VARCHAR(100) NOT NULL,
     CodMunicipio INT,
-    MunicipioAtendido VARCHAR(100) NOT NULL,
-    UF VARCHAR(2) NOT NULL,
+    #MunicipioAtendido VARCHAR(100) NOT NULL,
+    #UF VARCHAR(2) NOT NULL,
     Latitude VARCHAR(200) NOT NULL,
     Longitude VARCHAR(200) NOT NULL,
     PRIMARY KEY (AOCI,CIAD)
@@ -49,16 +48,20 @@ CREATE TABLE IF NOT EXISTS Aerodromo(
 CREATE TABLE IF NOT EXISTS VooOperado(
 	ID_VooOperado INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     CodEmpresa INT NOT NULL,
-    CodPerido INT NOT NULL,
+    CodPeriodo INT NOT NULL,
     CodOrigem INT,
     CodDestino INT,
     Tarifa INT NOT NULL,
     AssentosComercializados INT NOT NULL
 );
 
+#-----------------------------CONSTAINT---------------------------------
 ALTER TABLE VooOperado ADD CONSTRAINT foreign key FK_Aerodromo_CodOrigem (CodOrigem) REFERENCES Aerodromo (CodAerodromo);
 ALTER TABLE VooOperado ADD CONSTRAINT foreign key FK_Aerodromo_CodDestino (CodDestino) REFERENCES Aerodromo (CodAerodromo);
 ALTER TABLE VooOperado ADD constraint foreign key FK_Empres_CodEmpresa (CodEmpresa) REFERENCES Empresa (CodEmpresa);
+ALTER TABLE VooOperado ADD constraint foreign key FK_Periodo_CodPeriodo (CodPeriodo) references Periodo (CodPeriodo);
+ALTER TABLE Aerodromo ADD constraint foreign key FK_Aerodromo_CodMunicipio (CodMunicipio) REFERENCES Municipio (CodMunicipio);
+#-----------------------------FIM CONSTRAINT---------------------------------
 #-----------------------------FIM AERÓDROMO---------------------------------
 
 
@@ -91,6 +94,8 @@ CREATE TABLE IF NOT EXISTS Import_VooOperado(
     AssentosComercializados int
 );
 
+#-----------------------------Dados do CSV---------------------------------
+#AQUIVO DE CSV A SER IMPORTADO DEVE SER ALOCADO NO SEGUINTE DIRETÓRIO "C:\\ProgramData\\MySQL\\MySQL Server 8.1\\Uploads\\"
 LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.1\\Uploads\\ICAOcadastro-de-aerodromos.UTF-8.csv'
 INTO TABLE Import_Aerodromo
 FIELDS TERMINATED BY ';'
@@ -106,10 +111,14 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
 (AnoReferencia, MesReferencia, ICAOEmpresaAerea, ICAOAerodromoOrigem, ICAOAerodromoDestino, Tarifa, AssentosComercializados);
+#-----------------------------Dados do CSV---------------------------------
 
 #-----------------------------Import_Sheets---------------------------------
- 
-insert into Anac.perido (AnoReferencia, MesReferencia)
+
+
+
+-----------------------------INSERT TABLES--------------------------------- 
+insert into Anac.Periodo (AnoReferencia, MesReferencia)
 SELECT AnoReferencia, MesReferencia
 FROM Import_VooOperado
 GROUP BY AnoReferencia, MesReferencia
@@ -126,18 +135,18 @@ FROM Import_Aerodromo
 GROUP BY UF, MunicipioAtendido
 ORDER BY UF, MunicipioAtendido;
 
-insert into Anac.Aerodromo(AOCI, CIAD, Nome,CodMunicipio, MunicipioAtendido, UF, Latitude, Longitude)
-SELECT OACI, CIAD ,NomeAerodromo ,(select CodMunicipio from Anac.Municipio WHERE ANAC.Municipio.NomeMunicipio = Import_Aerodromo.MunicipioAtendido LIMIT 1) as CodMunicipio,MunicipioAtendido ,UF ,Latitude ,Longitude
+insert into Anac.Aerodromo(AOCI, CIAD, Nome,CodMunicipio,Latitude, Longitude)
+SELECT OACI, CIAD ,NomeAerodromo ,(select CodMunicipio from Anac.Municipio WHERE ANAC.Municipio.NomeMunicipio = Import_Aerodromo.MunicipioAtendido LIMIT 1) as CodMunicipio,Latitude ,Longitude
 FROM Import_Aerodromo;
 
-insert into Anac.VooOperado(CodEmpresa, CodPerido, CodOrigem, CodDestino, Tarifa, AssentosComercializados)
+insert into Anac.VooOperado(CodEmpresa, CodPeriodo, CodOrigem, CodDestino, Tarifa, AssentosComercializados)
 select (SELECT CodEmpresa 
 		FROM Anac.Empresa 
         where Anac.Empresa.ICAOEmpresa = Import_VooOperado.ICAOEmpresaAerea) as CodEmpresa,
        (SELECT CodPeriodo 
-		FROM Anac.perido 
-        where Import_VooOperado.AnoReferencia = Anac.perido.AnoReferencia 
-        and Import_Sheets.Import_VooOperado.MesReferencia = Anac.perido.MesReferencia ) as CodPerido,
+		FROM Anac.Periodo 
+        where Import_VooOperado.AnoReferencia = Anac.Periodo.AnoReferencia 
+        and Import_Sheets.Import_VooOperado.MesReferencia = Anac.Periodo.MesReferencia ) as CodPeriodo,
         (SELECT CodAerodromo 
         FROM Anac.Aerodromo 
         WHERE Anac.Aerodromo.AOCI = Import_VooOperado.ICAOAerodromoOrigem) as CodOrigem,
