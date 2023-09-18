@@ -7,6 +7,10 @@
 #https://skyvector.com/
 #Metadados dataset dos voos: https://www.anac.gov.br/acesso-a-informacao/dados-abertos/areas-de-atuacao/voos-e-operacoes-aereas/tarifas-aereas-domesticas/46-tarifas-aereas-domesticas
 #https://www.gov.br/anac/pt-br/assuntos/regulados/aerodromos/lista-de-aerodromos-civis-cadastrados
+#--------------------------------------------------------------
+#--------------------------------------------------------------
+
+#-----------------------------INICIO AERÓDROMO---------------------------------
 #DROP DATABASE Anac;
 
 CREATE DATABASE IF NOT EXISTS Anac;

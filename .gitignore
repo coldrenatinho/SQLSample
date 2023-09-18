@@ -1,7 +1,9 @@
 *.pdf
 /Atividade/Data
 /AtividadeAvaliativa/DAta
+/AtividadeAvaliativa_old
 *.png
 *.jpeg
 *.zip
 *.rar
+*.docs
