@@ -1,7 +1,8 @@
 *.pdf
-/Atividade/Data
-/AtividadeAvaliativa/DAta
-/AtividadeAvaliativa_old
+/AtividadeAvaliativa/.SigaaData
+/AtividadeAvaliativa/ScreenShot
+/Atividade/.SigaaData
+/Atividade/ScreenShot
 /old
 *.png
 *.jpeg
